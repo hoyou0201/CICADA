@@ -13,7 +13,7 @@
 
 ## Plankton (상태 보기)
 - [ ] https://plankton.hoyou.dev 에 각자 GitHub로 로그인되고, 이 저장소를 연결하면 보인다.
-- [ ] `.plankton.example.yml`을 `.plankton.yml`로 복사하고 팀원 GitHub 아이디와 동시 작업 수(에이전트 수)를 적어 커밋했다.
+- [ ] (선택) 리더 화면에서 사람별 여유를 보고 싶으면 `.plankton.example.yml`을 `.plankton.yml`로 복사해 팀원 GitHub 아이디를 적어 커밋했다. 없어도 담당자로 등장한 사람이 팀원으로 잡힌다.
 - [ ] 읽기 전용 토큰을 만들어 `PLANKTON_TOKEN` 환경 변수로 넣었다. GitHub → Settings → Developer settings → Fine-grained tokens, 이 저장소만 선택, Issues·Pull requests·Contents·Metadata 모두 Read-only.
 
 ## 배포
