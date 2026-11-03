@@ -1,0 +1,12 @@
+# 선택 사항. 사람별 여유(리더 화면)를 보고 싶을 때만 .plankton.yml로 복사한다.
+# 아래 아이디는 예시이므로 실제 GitHub 아이디로 바꾼다. 에이전트 수는 제한이 아니라 표시용 기준이다.
+members:
+  - login: your-github-id
+    capacity: 2        # 동시에 진행할 수 있는 일 수 (그 사람이 쓰는 에이전트 수)
+  - login: teammate-1
+    capacity: 1
+  - login: teammate-2
+    capacity: 1
+labels:
+  inProgress: in-progress
+  estimatePrefix: "est:"
