@@ -16,4 +16,4 @@
 | `AGENTS.md` | 모든 AI 도구가 따르는 규칙과 작업 루프 |
 | `docs/BRIEF.md` | 계획의 단일 원본 (스킬이 채운다) |
 | `.claude/skills/` | `contest-topic`, `contest-plan`, `contest-split` |
-| `.plankton.example.yml` | 팀원과 동시 작업 수 설정 예시 |
+| `.plankton.example.yml` | 팀원 설정 예시 (선택) |
