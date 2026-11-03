@@ -1,8 +1,8 @@
 ---
-description: Shared instructions for the three-person contest team
+description: Shared instructions for the contest team
 alwaysApply: true
 ---
 
-작업 전에 저장소 루트의 [AGENTS.md](../../AGENTS.md)를 읽고 공통 작업 규칙을 따른다.
-앱 작업의 현재 합의는 [docs/BRIEF.md](../../docs/BRIEF.md)를 확인한다.
+작업 전에 저장소 루트의 [AGENTS.md](../../AGENTS.md)를 읽고 따른다.
+계획은 [docs/BRIEF.md](../../docs/BRIEF.md)를 확인한다.
 규칙을 이 파일에 복제하지 않고 AGENTS.md를 기준으로 유지한다.

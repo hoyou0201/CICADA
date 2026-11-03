@@ -1,42 +1,19 @@
-# CICADA · 3인 바이브 코딩 대회 준비
+# CICADA
 
-주제 공개 후 바로 시작하기 위한 협업 키트입니다. **현재 앱 코드와 기술 스택은 미정**입니다.
-대회 일정·시간·사전 코드 허용 여부도 아직 확인되지 않았습니다.
+3인 대회용 협업 저장소. 할 일을 사람에게 미리 나누지 않고 **작은 GitHub 이슈의 공용 풀**로 두고, 각자의 AI 에이전트가 착수 가능한 일을 집어 병렬로 처리한다. 상태는 [Plankton](https://plankton.hoyou.dev)에서 본다.
 
-## 지금 할 일
+## 흐름
 
-1. 세 명이 [사전 준비표](docs/READY.md)를 보고 계정·Git·AI 로그인과 역할을 확인합니다.
-2. 팀원은 각자 저장소를 clone하고 Antigravity에서 **저장소 루트**를 엽니다.
-3. [도구 설정과 협업 방법](docs/TEAM.md)을 읽고, [첫 대화 프롬프트](docs/PROMPTS.md)를 사용합니다.
-4. 아래 두 명령을 실행합니다. 준비용 스크립트는 Node.js 22 이상에서 실행하며 패키지 설치가 필요 없습니다.
+1. [대회 전 준비](docs/READY.md)를 확인한다.
+2. 주제가 공개되면 스킬을 순서대로 쓴다: `contest-topic` → `contest-plan` → `contest-split`. 결과는 [docs/BRIEF.md](docs/BRIEF.md)와 GitHub 이슈에 쌓인다.
+3. 에이전트는 [AGENTS.md](AGENTS.md)의 작업 루프대로 일을 고르고, 만들고, 합친다.
+4. 마지막 15%는 [발표 준비](docs/DEMO.md).
 
-```sh
-node scripts/doctor.mjs
-node scripts/check-prep.mjs
-```
+## 구성
 
-`doctor`는 이 컴퓨터의 로컬 환경만 점검합니다. 계정 로그인·원격 쓰기 권한·배포 성공은 별도 확인입니다.
-`check-prep`는 준비 파일·문서 링크·규칙 연결·환경 파일 제외 규칙을 검사합니다. **앱 테스트가 아닙니다.**
-
-## 주제가 나오면
-
-1. [기획서](docs/BRIEF.md)에 공식 규정, 문제, 핵심 사용자 흐름, 우선순위 순 기능 목록(개수 제한 없음)을 적습니다.
-2. 팀원이 익숙한 기술을 선택하고 실행·빌드·배포 명령을 기획서에 기록합니다.
-3. 첫 통합 시점과 세 명의 담당 경로·데이터 계약을 합의한 뒤 개발합니다.
-4. [데모·제출표](docs/DEMO.md)를 보면서 시연과 제출을 마무리합니다.
-
-## 문서 위치
-
-| 파일 | 용도 |
+| 경로 | 내용 |
 | --- | --- |
-| [AGENTS.md](AGENTS.md) | 모든 AI가 따를 공통 작업 규칙 |
-| [TEAM.md](docs/TEAM.md) | 역할 초안, 도구별 연결, Git 협업·충돌 처리 |
-| [READY.md](docs/READY.md) | 대회 전 확인·3인 리허설 |
-| [BRIEF.md](docs/BRIEF.md) | 주제·규정·스택·작업·계약의 팀 합의 |
-| [PROMPTS.md](docs/PROMPTS.md) | 바로 붙여 넣는 AI 지시문 |
-| [DEMO.md](docs/DEMO.md) | 시간 배분, 시연 대본, 장애 대안·제출 |
-| [STATUS.md](docs/STATUS.md) | 실제 확인한 것과 미확인 항목 |
-| [SOURCES.md](docs/SOURCES.md) | 도구 설정의 공식 근거 |
-
-이 준비 키트를 대회 저장소에 가져가도 되는지는 주최 측 규정 확인이 먼저입니다.
-GitHub 공유에는 이 브랜치의 push와 PR 반영이 필요합니다. 현재 작업 상태는 STATUS.md에 기록합니다.
+| `AGENTS.md` | 모든 AI 도구가 따르는 규칙과 작업 루프 |
+| `docs/BRIEF.md` | 계획의 단일 원본 (스킬이 채운다) |
+| `.claude/skills/` | `contest-topic`, `contest-plan`, `contest-split` |
+| `.plankton.example.yml` | 팀원과 동시 작업 수 설정 예시 |
