@@ -19,7 +19,7 @@
    curl -s -H "Authorization: Bearer $PLANKTON_TOKEN" \
      "https://plankton.hoyou.dev/api/v1/snapshot?repo=OWNER/REPO"   # .leader.readyUnassigned가 우선순위 순
    ```
-   토큰이 없으면 Plankton 화면이나 `gh issue list`로 의존(`blocked by`)이 모두 닫힌 이슈를 직접 찾는다.
+   `PLANKTON_TOKEN`은 레포 소유자의 에이전트만 쓴다(collaborator는 읽기 전용 토큰을 만들 수 없다). 토큰이 없으면 Plankton 화면이나 `gh issue list`로 의존(`blocked by`)이 모두 닫힌 이슈를 직접 찾는다.
 2. **잡는다.** 곧바로 표시하고 확인한다.
    ```sh
    gh issue edit N --add-assignee @me --add-label in-progress
