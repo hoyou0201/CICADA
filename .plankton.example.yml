@@ -1,4 +1,4 @@
-# 선택 사항. 사람별 여유(리더 화면)를 보고 싶을 때만 .plankton.yml로 복사한다.
+# 선택 사항. 사람별 여유와 마감 대비 종료 예상(리더 화면)을 보고 싶을 때 .plankton.yml로 복사한다.
 # 아래 아이디는 예시이므로 실제 GitHub 아이디로 바꾼다. 에이전트 수는 제한이 아니라 표시용 기준이다.
 members:
   - login: your-github-id
@@ -10,3 +10,5 @@ members:
 labels:
   inProgress: in-progress
   estimatePrefix: "est:"
+# 대회 마감. 적으면 리더 화면의 "종료 예상"이 마감까지 여유 또는 초과 분을 보여 준다. 시간대를 안 쓰면 한국 시간으로 본다.
+deadline: "2026-11-20T18:00:00+09:00"
