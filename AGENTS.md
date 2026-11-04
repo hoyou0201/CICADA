@@ -8,13 +8,17 @@
 - **일은 공용 풀**에 있다. 담당자는 일을 *시작할 때* 생기고, 끝나면 이슈가 닫힌다.
 - 상태는 Plankton(https://plankton.hoyou.dev)에서 본다. `착수 가능` = 열려 있고 막는 이슈가 없는 일.
 - 계획은 `docs/BRIEF.md` 하나에 있다. 읽고 따르되, 비어 있거나 `미정`인 곳을 임의로 확정하지 않는다.
-- 준비 순서는 스킬로 한다: `contest-topic` → `contest-plan` → `contest-split` (`.claude/skills/`). Claude Code는 자동으로 읽고, 다른 도구는 해당 `SKILL.md`를 대화에 첨부한다.
+- 준비 순서는 스킬로 한다: `contest-topic` → `contest-plan` → `contest-split`. 대회 중 일을 정해 주는 리더 AI는 `contest-lead`를 쓴다(`.claude/skills/`). Claude Code는 자동으로 읽고, 다른 도구는 해당 `SKILL.md`를 대화에 첨부한다.
 
 ## 작업 루프
 
 일을 시작하거나 끝낼 때마다 반복한다.
 
-1. **고른다.** 착수 가능하고 담당자 없는 이슈 중 우선순위가 높은 것(다른 일을 많이 풀어 주는 순)을 고른다.
+1. **고른다.** 먼저 **리더가 내 계정에 배정해 둔 일**을 확인한다. 시작 전(`in-progress` 없음)이고 막히지 않은 열린 이슈가 있으면 풀보다 그것부터 한다. 이슈에 리더의 `지시:` 코멘트가 있으면 그 내용을 따른다. 배정된 일이 막혀 있으면 시작하지 말고 이슈에 코멘트로 알린 뒤 풀에서 고른다.
+   ```sh
+   gh issue list --assignee @me --state open --json number,title,labels   # 내게 배정된 일
+   ```
+   배정된 일이 없으면 착수 가능하고 담당자 없는 이슈 중 우선순위가 높은 것(다른 일을 많이 풀어 주는 순)을 고른다.
    ```sh
    curl -s -H "Authorization: Bearer $PLANKTON_TOKEN" \
      "https://plankton.hoyou.dev/api/v1/snapshot?repo=OWNER/REPO"   # .leader.readyUnassigned가 우선순위 순
@@ -31,7 +35,7 @@
 4. **합친다.** PR 본문에 `Closes #N`을 쓰고, `main`을 먼저 받아 충돌이 없으면 병합한다. 이슈가 닫히면 1로 돌아간다.
 5. **막히면** 10분을 넘기기 전에 이슈에 막힌 이유를 코멘트하고 담당자와 `in-progress`를 해제한 뒤 다른 일을 고른다. 다른 에이전트가 이어받을 수 있게 한 줄로 현재 상태를 남긴다.
 
-리더(사용자)는 언제든 담당자를 바꾸거나 우선순위를 조정할 수 있고, 그 지시가 위 규칙보다 우선한다.
+리더(사용자)는 언제든 담당자를 바꾸거나 우선순위를 조정할 수 있고, 그 지시가 위 규칙보다 우선한다. 리더 AI의 배정은 담당자 지정과 `지시:` 코멘트로 이루어지며, 일하는 에이전트는 이를 리더의 지시로 본다(`contest-lead` 스킬).
 
 ## 이슈를 만들 때
 
