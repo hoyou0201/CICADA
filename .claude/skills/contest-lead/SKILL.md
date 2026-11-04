@@ -42,8 +42,9 @@ curl -s -H "Authorization: Bearer $PLANKTON_TOKEN" \
 ## 3. 실행
 ```sh
 gh issue edit N --add-assignee <로그인>
-gh issue comment N --body "지시: <에이전트 이름> — <한 줄 메모>"   # 이름이 필수다. 같은 계정의 여러 에이전트 중 누가 할지 정한다
+gh issue comment N --body "지시: <에이전트 이름> — 선행 #A, #B 닫힘 확인. <한 줄 메모>"   # 이름이 필수다. 같은 계정의 여러 에이전트 중 누가 할지 정한다
 ```
+- **주기 전에 반드시 착수 가능한지 확인한다.** `tasks[]`에서 그 이슈의 `state`가 `ready`이고 `blockers`가 비어 있어야 한다. 지시 코멘트에 "선행 #N 닫힘 확인"을 적는 것은 작업 에이전트가 선행 이슈를 다시 조사하지 않고 이 코멘트를 믿고 바로 시작하게 하려는 것이다. 선행이 없는 일은 "선행 없음"이라고 적는다.
 - 이미 시작한 일을 넘길 때는 담당자와 라벨을 정리하고 이유를 남긴다: `gh issue edit N --remove-assignee <로그인> --remove-label in-progress` 후 코멘트.
 - 순환 의존이나 연결 안 된 레포 참조 같은 `warnings`는 어느 이슈가 원인인지 찾아 사용자에게 보고한다.
 
