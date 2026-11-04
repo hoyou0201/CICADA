@@ -1,6 +1,6 @@
 ---
 name: 작업
-about: 15~30분 크기의 작업 (보통 contest-split이 만든다)
+about: 10~20분 크기의 작업 (보통 contest-split이 만든다)
 title: "[T] "
 labels: ""
 ---
