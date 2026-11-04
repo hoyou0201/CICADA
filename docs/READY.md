@@ -15,7 +15,7 @@
 - [ ] https://plankton.hoyou.dev 에 각자 GitHub로 로그인되고, 이 저장소를 연결하면 보인다.
 - [ ] (선택) 리더 화면에서 사람별 여유와 마감 대비 종료 예상(`deadline`)을 보고 싶으면 `.plankton.example.yml`을 `.plankton.yml`로 복사해 팀원 GitHub 아이디를 적어 커밋했다. 없어도 담당자로 등장한 사람이 팀원으로 잡힌다.
 - [ ] (레포 소유자만) 읽기 전용 토큰을 만들어 `PLANKTON_TOKEN` 환경 변수로 넣었다. GitHub → Settings → Developer settings → Fine-grained tokens, Resource owner는 소유자 본인, Contents·Issues·Pull requests Read-only. 자세한 방법은 Plankton 레포의 `docs/SETUP.md` 6절.
-- [ ] 소유자가 아닌 팀원은 토큰을 만들 필요가 없다. GitHub가 collaborator에게는 fine-grained 토큰을 허용하지 않으므로, Plankton 화면과 `gh issue list`로 착수 가능한 일을 찾는다(`AGENTS.md` 작업 루프 1번). 토큰을 사람 사이에 전달하지 않는다.
+- [ ] 소유자가 아닌 팀원과 작업 에이전트는 토큰이 필요 없다. 일은 리더가 지시하고(`AGENTS.md` 작업 루프), 상태는 Plankton 화면에서 본다. GitHub가 collaborator에게는 fine-grained 토큰을 허용하지 않기도 한다. 토큰을 사람 사이에 전달하지 않는다.
 
 ## 배포
 - [ ] 쓸 배포 서비스에 로그인해 두었다 (스택이 정해지면 빈 배포를 한 번 해 본다).
