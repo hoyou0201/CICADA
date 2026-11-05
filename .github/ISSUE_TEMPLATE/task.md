@@ -1,6 +1,6 @@
 ---
 name: 작업
-about: 10~20분 크기의 작업 (보통 contest-split이 만든다)
+about: PR 하나로 끝나는 기능 한 조각 (보통 contest-split이 만든다)
 title: "[T] "
 labels: ""
 ---
