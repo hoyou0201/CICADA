@@ -44,21 +44,32 @@ export function startMoveReceiver(myKey: string): () => void {
   let channel: RealtimeChannel | null = null
   /** 사람(key)별로 마지막에 적용한 at */
   const lastAt = new Map<string, number>()
+  /** presence보다 먼저 도착한 위치. 그 사람이 목록에 들어오면 적용한다. */
+  const pending = new Map<string, MovePayload>()
 
-  const handle = (payload: unknown) => {
-    if (!isMovePayload(payload) || payload.key === myKey) return
-    const { remotePlayers, updateRemoteMove } = useStore.getState()
-    if (!remotePlayers[payload.key]) return
+  const apply = (payload: MovePayload) => {
     const previous = lastAt.get(payload.key)
     if (previous !== undefined && payload.at < previous) return
     lastAt.set(payload.key, payload.at)
-    updateRemoteMove(payload)
+    useStore.getState().updateRemoteMove(payload)
+  }
+
+  const handle = (payload: unknown) => {
+    if (!isMovePayload(payload) || payload.key === myKey) return
+    const { remotePlayers } = useStore.getState()
+    if (!remotePlayers[payload.key]) {
+      const previous = pending.get(payload.key)
+      if (!previous || payload.at >= previous.at) pending.set(payload.key, payload)
+      return
+    }
+    apply(payload)
   }
 
   const closeChannel = () => {
     if (channel) client.removeChannel(channel).catch(() => {})
     channel = null
     lastAt.clear()
+    pending.clear()
   }
 
   const openChannel = (roomId: string) => {
@@ -77,9 +88,14 @@ export function startMoveReceiver(myKey: string): () => void {
     if (state.roomId !== prev.roomId) {
       openChannel(state.roomId)
     } else if (state.remotePlayers !== prev.remotePlayers) {
-      // 나간 사람의 기록은 지운다.
+      // 나간 사람의 기록은 지운다. 목록에 들어온 사람의 대기 위치는 적용한다.
       for (const key of lastAt.keys()) {
         if (!state.remotePlayers[key]) lastAt.delete(key)
+      }
+      for (const [key, payload] of pending) {
+        if (!state.remotePlayers[key]) continue
+        pending.delete(key)
+        apply(payload)
       }
     }
   })

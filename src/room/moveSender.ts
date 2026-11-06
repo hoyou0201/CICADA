@@ -13,6 +13,7 @@ import { supabase } from './supabase.ts'
  * - 초당 최대 MOVE_MAX_PER_SECOND번: 보낸 뒤 최소 간격 안에 또 움직이면 간격이 지난 뒤
  *   그때의 최신 위치 하나만 보낸다(마지막 위치는 반드시 전달된다).
  * - 멈춰 있으면(마지막으로 보낸 값과 같으면) 보내지 않는다.
+ *   방에 들어온 직후 첫 위치만은 움직이지 않아도 보낸다.
  * - 방이 바뀌면 이전 방 채널을 닫고 새 방 채널로 옮긴다.
  * - supabase가 null이면(혼자 모드) 아무것도 하지 않는다.
  * 채널 연결·presence는 presence.ts가 맡는다.
@@ -50,6 +51,8 @@ export function startMoveSender(key: string): () => void {
   let last: Pose = currentPose()
   let lastSentAt = 0
   let timer: ReturnType<typeof setTimeout> | null = null
+  /** 방에 들어온 직후 위치는 한 번 보내야 상대가 바로 볼 수 있다 */
+  let announced = false
 
   const closeChannel = () => {
     if (timer !== null) {
@@ -72,9 +75,10 @@ export function startMoveSender(key: string): () => void {
     }
 
     const pose = currentPose()
-    if (samePose(pose, last)) return
+    if (announced && samePose(pose, last)) return
 
     const payload: MovePayload = { key, ...pose, at: Date.now() }
+    announced = true
     channel.send({ type: 'broadcast', event: MOVE_EVENT, payload }).catch(() => {})
     last = pose
     lastSentAt = Date.now()
@@ -91,6 +95,7 @@ export function startMoveSender(key: string): () => void {
     closeChannel()
     last = currentPose()
     lastSentAt = 0
+    announced = false
     const next = client.channel(roomChannel(roomId), {
       config: { broadcast: { self: false } },
     })
