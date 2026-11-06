@@ -1,9 +1,11 @@
 import { Html } from '@react-three/drei'
 import type { AvatarLook, PresenceStatus } from '../../contract/room'
+import { useReactions } from '../../room/reactions'
 import { DEFAULT_AVATAR_COLOR, getPreset } from './presets'
 import { useWalkAnim } from './useWalkAnim'
 import GlbAvatar from './GlbAvatar'
 import Hair from './Hair'
+import Reaction from './Reaction'
 
 export const WATCHING_LABEL = '수강 중'
 
@@ -13,14 +15,19 @@ type Props = {
   status: PresenceStatus
   /** 움직이는 중이면 통통 튀고, 아니면 숨쉬듯 움직인다 */
   moving?: boolean
+  /** 이 아바타가 나라면 true. 내가 보낸 리액션(저장소 selfKey)으로 끄덕·손들기·Zzz를 보여 준다 */
+  isSelf?: boolean
+  /** 다른 사람 아바타면 그 사람의 presence key. 받은 리액션으로 끄덕·손들기·Zzz를 보여 준다 */
+  reactionKey?: string
 }
 
 const FACE_COLOR = '#2b2b3a'
 const AWAY_OPACITY = 0.5
 
 /** 원점이 발 아래인 캡슐·구 조합 아바타. 위치와 회전은 부모 group이 정한다. */
-export default function AvatarModel({ nickname, avatar, status, moving = false }: Props) {
+export default function AvatarModel({ nickname, avatar, status, moving = false, isSelf = false, reactionKey }: Props) {
   const bodyRef = useWalkAnim(moving)
+  const selfKey = useReactions((state) => state.selfKey)
   const preset = getPreset(avatar.preset)
   const color = avatar.color || DEFAULT_AVATAR_COLOR
   const { body, head, eye } = preset
@@ -83,7 +90,9 @@ export default function AvatarModel({ nickname, avatar, status, moving = false }
 
   return (
     <group>
-      {modelUrl ? <GlbAvatar url={modelUrl} moving={moving} away={away} fallback={shapes} /> : shapes}
+      <Reaction reactionKey={isSelf ? selfKey : reactionKey} color={color} body={body} head={head}>
+        {modelUrl ? <GlbAvatar url={modelUrl} moving={moving} away={away} fallback={shapes} /> : shapes}
+      </Reaction>
       <Html position={[0, labelY, 0]} center distanceFactor={8} zIndexRange={[0, 0]} style={{ pointerEvents: 'none' }}>
         <div style={{ textAlign: 'center', whiteSpace: 'nowrap', fontSize: 14 }}>
           <div
