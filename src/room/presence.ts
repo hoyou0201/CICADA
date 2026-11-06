@@ -6,7 +6,7 @@ import {
   type PresenceStatus,
 } from '../contract/room.ts'
 import { useStore } from '../state/store.ts'
-import { supabase } from './supabase.ts'
+import { createRealtimeClient } from './supabase.ts'
 
 /**
  * 채널 `campus`(모든 방 공통) presence 참여와 이탈.
@@ -81,7 +81,11 @@ export function joinPresence(init: PresenceInit): PresenceHandle {
   const { setConnection, setRemotePlayers } = useStore.getState()
   const key = crypto.randomUUID()
 
-  if (!supabase) {
+  const client = createRealtimeClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_ANON_KEY,
+  )
+  if (!client) {
     setConnection('offline')
     setRemotePlayers([])
     const solo: PresenceHandle = {
@@ -95,7 +99,6 @@ export function joinPresence(init: PresenceInit): PresenceHandle {
     return solo
   }
 
-  const client = supabase
   let nickname = init.nickname
   let status: PresenceStatus = init.status ?? 'idle'
   let closed = false
@@ -164,7 +167,7 @@ export function joinPresence(init: PresenceInit): PresenceHandle {
       unsubscribeStore()
       window.removeEventListener('pagehide', onPageHide)
       channel.untrack().catch(() => {})
-      client.removeChannel(channel).catch(() => {})
+      client.removeChannel(channel).catch(() => {}).finally(() => client.realtime.disconnect())
       useStore.getState().setRemotePlayers([])
       if (active === handle) active = null
     },

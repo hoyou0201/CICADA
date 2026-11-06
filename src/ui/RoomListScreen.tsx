@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import type { Navigate } from '../App.tsx'
 import { CAMPUS_CHANNEL } from '../contract/room.ts'
-import { supabase } from '../room/supabase.ts'
+import { SAMPLE_BADGE } from '../contract/lms.ts'
+import { createRealtimeClient, isRealtimeConfigured } from '../room/supabase.ts'
 import { ROOMS } from '../rooms.ts'
 import { useStore } from '../state/store.ts'
 
@@ -11,13 +12,17 @@ type Counts = Record<string, number>
 export default function RoomListScreen({ navigate }: Props) {
   const [counts, setCounts] = useState<Counts | null>(null)
   const [status, setStatus] = useState<'connecting' | 'online' | 'offline'>(
-    supabase ? 'connecting' : 'offline',
+    isRealtimeConfigured ? 'connecting' : 'offline',
   )
   const setRoomId = useStore((s) => s.setRoomId)
+  const isSample = useStore((s) => s.session?.isSample)
 
   useEffect(() => {
-    if (!supabase) return
-    const client = supabase
+    const client = createRealtimeClient(
+      import.meta.env.VITE_SUPABASE_URL,
+      import.meta.env.VITE_SUPABASE_ANON_KEY,
+    )
+    if (!client) return
     const channel = client.channel(CAMPUS_CHANNEL)
     let closed = false
 
@@ -42,7 +47,7 @@ export default function RoomListScreen({ navigate }: Props) {
 
     return () => {
       closed = true
-      void client.removeChannel(channel)
+      void client.removeChannel(channel).catch(() => {}).finally(() => client.realtime.disconnect())
     }
   }, [])
 
@@ -50,6 +55,7 @@ export default function RoomListScreen({ navigate }: Props) {
     <main className="screen center-screen">
       <section style={{ width: 'min(600px, 90vw)' }}>
         <h1>강의실 선택</h1>
+        {isSample && <span className="badge badge-sample">{SAMPLE_BADGE}</span>}
         {status === 'offline' && <p role="status">인원 정보를 불러올 수 없어요. 혼자 모드로 입장할 수 있어요.</p>}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 'var(--space-3)' }}>
           {ROOMS.map((room) => (
