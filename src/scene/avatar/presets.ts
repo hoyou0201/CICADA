@@ -16,7 +16,7 @@ export type AvatarPreset = {
 export const DEFAULT_PRESET_ID = 'round'
 export const DEFAULT_AVATAR_COLOR = '#6aa9ff'
 export const AVATAR_COLORS = [
-  DEFAULT_AVATAR_COLOR, '#ff9eb5', '#ffd166', '#8bd5a0', '#bca4f5', '#f4a261',
+  '#4f8cff', DEFAULT_AVATAR_COLOR, '#ff9eb5', '#ffd166', '#8bd5a0', '#bca4f5', '#f4a261',
 ] as const
 
 const SHAPE = {
@@ -24,13 +24,13 @@ const SHAPE = {
   head: { radius: 0.3 },
   eye: { radius: 0.045, spacing: 0.11 },
 }
-const HAIR_STYLES: readonly { id: HairStyle; name: string }[] = [
+export const HAIR_STYLES: readonly { id: HairStyle; name: string }[] = [
   { id: 'short', name: '짧은 머리' },
   { id: 'bob', name: '단발머리' },
   { id: 'spiky', name: '뾰족 머리' },
   { id: 'pigtails', name: '양갈래 머리' },
 ]
-const ACCESSORIES: readonly { id: Accessory; name: string }[] = [
+export const ACCESSORIES: readonly { id: Accessory; name: string }[] = [
   { id: 'none', name: '소품 없음' },
   { id: 'hat', name: '모자' },
   { id: 'glasses', name: '안경' },
