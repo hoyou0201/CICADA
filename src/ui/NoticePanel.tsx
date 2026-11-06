@@ -5,7 +5,7 @@ import { NOTICE_BOARDS, NOTICES_EMPTY_MESSAGE, NOTICES_ERROR_MESSAGE } from '../
 const PANEL_STYLE: CSSProperties = {
   position: 'absolute',
   left: 'var(--space-4)',
-  bottom: 'var(--space-4)',
+  top: 120,
   width: 340,
   maxWidth: 'calc(100% - 32px)',
   maxHeight: '65vh',
