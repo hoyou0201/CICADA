@@ -1,4 +1,5 @@
 import { Canvas } from '@react-three/fiber'
+import type { Navigate } from '../App.tsx'
 import Blackboard from './Blackboard.tsx'
 import Desks from './Desks.tsx'
 import ExitDoor from './ExitDoor.tsx'
@@ -11,7 +12,9 @@ import Room from './Room.tsx'
 import RoomSign from './RoomSign.tsx'
 import { CAMERA_START } from './layout.ts'
 
-export default function Classroom() {
+type Props = { navigate: Navigate }
+
+export default function Classroom({ navigate }: Props) {
   return (
     <Canvas className="scene-canvas" shadows camera={{ position: CAMERA_START, fov: 60 }}>
       <Lighting />
@@ -21,7 +24,7 @@ export default function Classroom() {
       <Professor />
       <NoticeBoard />
       <RoomSign />
-      <ExitDoor />
+      <ExitDoor navigate={navigate} />
       <Player />
       <RemoteAvatars />
     </Canvas>
