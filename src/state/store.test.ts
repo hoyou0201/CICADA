@@ -110,6 +110,18 @@ describe('store', () => {
     expect(get().professorChatOpen).toBe(false)
   })
 
+  it('공지 창과 공지 결과를 공유하고 초기화한다', () => {
+    expect(get().noticeOpen).toBe(false)
+    expect(get().notices).toBeNull()
+    get().setNoticeOpen(true)
+    get().setNotices({ board: 246, items: [], fetchedAt: '2026-11-06T00:00:00Z', isSample: true })
+    expect(get().noticeOpen).toBe(true)
+    expect(get().notices?.items).toEqual([])
+    resetStore()
+    expect(get().noticeOpen).toBe(false)
+    expect(get().notices).toBeNull()
+  })
+
   it('연결 상태와 교수님 대화 기록', () => {
     get().setConnection('offline')
     expect(get().connection).toBe('offline')
