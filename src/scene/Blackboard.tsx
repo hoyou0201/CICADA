@@ -1,5 +1,6 @@
-import { useEffect, useMemo } from 'react'
-import { CanvasTexture, SRGBColorSpace } from 'three'
+import { useEffect, useMemo, useState } from 'react'
+import { CanvasTexture, SRGBColorSpace, VideoTexture } from 'three'
+import { useScreenShare } from '../screen/useScreenShare.ts'
 import { BLACKBOARD } from './layout.ts'
 
 const EMPTY_TEXT = '강의를 골라 칠판에 띄우세요'
@@ -25,9 +26,54 @@ function makeEmptyTexture() {
   return texture
 }
 
-// 앞쪽 벽의 칠판. 공유 화면 스트림이 없을 때는 안내 문구가 쓰여 있다.
+// 내 화면 공유 스트림을 칠판 안에 비율을 지켜 그린다. 소리는 없고 네트워크로 보내지 않는다.
+// 스트림이 바뀌거나 끝나면 이 컴포넌트가 사라지면서 video와 텍스처를 정리한다.
+function StreamScreen({ stream, width, height }: { stream: MediaStream; width: number; height: number }) {
+  const [aspect, setAspect] = useState(width / height)
+  const { video, texture } = useMemo(() => {
+    const el = document.createElement('video')
+    el.muted = true
+    el.playsInline = true
+    const tex = new VideoTexture(el)
+    tex.colorSpace = SRGBColorSpace
+    return { video: el, texture: tex }
+  }, [])
+
+  useEffect(() => {
+    video.srcObject = stream
+    const onMeta = () => {
+      if (video.videoWidth && video.videoHeight) setAspect(video.videoWidth / video.videoHeight)
+    }
+    video.addEventListener('loadedmetadata', onMeta)
+    void video.play().catch(() => {})
+    return () => {
+      video.removeEventListener('loadedmetadata', onMeta)
+      video.pause()
+      video.srcObject = null
+      texture.dispose()
+    }
+  }, [video, texture, stream])
+
+  const fitWidth = Math.min(width, height * aspect)
+  const fitHeight = fitWidth / aspect
+  return (
+    <>
+      <mesh position={[0, 0, 0.035]}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial color="#000000" toneMapped={false} />
+      </mesh>
+      <mesh position={[0, 0, 0.04]}>
+        <planeGeometry args={[fitWidth, fitHeight]} />
+        <meshBasicMaterial map={texture} toneMapped={false} />
+      </mesh>
+    </>
+  )
+}
+
+// 앞쪽 벽의 칠판. 공유 화면 스트림이 있으면 영상을, 없으면 안내 문구를 보여 준다.
 export default function Blackboard() {
   const [width, height] = BLACKBOARD.size
+  const stream = useScreenShare((state) => state.stream)
   const emptyTexture = useMemo(() => makeEmptyTexture(), [])
   useEffect(() => () => emptyTexture.dispose(), [emptyTexture])
 
@@ -41,6 +87,7 @@ export default function Blackboard() {
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial map={emptyTexture} toneMapped={false} />
       </mesh>
+      {stream && <StreamScreen stream={stream} width={width} height={height} />}
       <mesh position={[0, -height / 2 - FRAME / 2, 0.06]} castShadow>
         <boxGeometry args={[width * 0.8, 0.05, 0.1]} />
         <meshStandardMaterial color="#8a6a46" roughness={0.7} />
