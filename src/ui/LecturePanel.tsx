@@ -9,20 +9,6 @@ import {
 import { useStore } from '../state/store.ts'
 import { openLecture, type OpenLectureResult } from './openLecture.ts'
 
-// 오른쪽 위 강의실 이동 바(약 64px)와 오른쪽 아래 AI 교수님 패널을 피해 그 사이에 둔다.
-const TOP_OFFSET = 88
-const CHAT_CLOSED_RESERVE = 88
-const CHAT_OPEN_RESERVE = 400
-
-const PANEL_STYLE: CSSProperties = {
-  position: 'absolute',
-  top: TOP_OFFSET,
-  right: 'var(--space-4)',
-  width: 340,
-  maxWidth: 'calc(100% - var(--space-5))',
-  overflowY: 'auto',
-}
-
 const HEADER_STYLE: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
@@ -70,8 +56,7 @@ function doneBadge(done: boolean | null) {
 // 내 LMS 정보를 보여 주는 접이식 패널. 영상을 누르면 새 창으로 열고 수강 중이 된다.
 export default function LecturePanel() {
   const desk = useStore((s) => s.desk)
-  const chatOpen = useStore((s) => s.professorChatOpen)
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [blocked, setBlocked] = useState<Extract<OpenLectureResult, { opened: false }> | null>(null)
 
   if (!desk) return null
@@ -90,14 +75,7 @@ export default function LecturePanel() {
   }
 
   return (
-    <section
-      className="panel"
-      style={{
-        ...PANEL_STYLE,
-        maxHeight: `calc(100% - ${TOP_OFFSET + (chatOpen ? CHAT_OPEN_RESERVE : CHAT_CLOSED_RESERVE)}px)`,
-      }}
-      aria-label="내 강의"
-    >
+    <section className="panel" aria-label="내 강의">
       <div style={HEADER_STYLE}>
         <h2 className="panel-title" style={{ margin: 0 }}>
           내 강의{' '}

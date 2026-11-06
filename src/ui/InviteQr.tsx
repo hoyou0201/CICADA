@@ -218,9 +218,6 @@ function makeQr(text: string): boolean[][] | null {
 /* ---------- 화면 ---------- */
 
 const STYLE: CSSProperties = {
-  position: 'absolute',
-  left: 'var(--space-4)',
-  bottom: 'var(--space-4)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',

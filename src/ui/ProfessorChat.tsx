@@ -54,7 +54,6 @@ export default function ProfessorChat() {
     <section
       className="panel"
       aria-label="AI 교수님"
-      style={{ position: 'absolute', right: 16, bottom: 16, width: 320, maxWidth: 'calc(100% - 32px)' }}
     >
       <h2 className="panel-title">
         AI 교수님 {sawSample && <span className="badge badge-sample">샘플</span>}{' '}

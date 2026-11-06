@@ -4,14 +4,10 @@ import { useAmbient } from '../audio/ambient.ts'
 export const SOUND_OFF_MESSAGE = '소리는 꺼져 있어요'
 
 const STYLE: CSSProperties = {
-  position: 'absolute',
-  top: 184,
-  left: 'var(--space-4)',
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center',
   gap: 'var(--space-2)',
-  maxWidth: 'min(360px, calc(100% - var(--space-5)))',
 }
 
 /** 창밖 새소리와 실내 잔향. 기본은 꺼져 있고, 실패해도 강의실의 다른 기능은 그대로다. */

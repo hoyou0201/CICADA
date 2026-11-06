@@ -5,13 +5,9 @@ import { ROOMS } from '../rooms.ts'
 import { useStore } from '../state/store.ts'
 
 const HUD_STYLE: CSSProperties = {
-  position: 'absolute',
-  top: 'var(--space-4)',
-  left: 'var(--space-4)',
   display: 'flex',
   flexDirection: 'column',
   gap: 'var(--space-1)',
-  maxWidth: 320,
 }
 
 const ROW_STYLE: CSSProperties = {
