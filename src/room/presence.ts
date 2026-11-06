@@ -73,6 +73,11 @@ export type PresenceInit = { nickname: string; status?: PresenceStatus }
 
 let active: PresenceHandle | null = null
 
+/** 이 탭의 presence key. 입장 위치가 겹칠 때 누가 비켜 설지 정할 때 쓴다. */
+export function currentPresenceKey(): string | null {
+  return active?.key ?? null
+}
+
 /** campus 채널에 참여한다. 이미 참여 중이면 먼저 나간다. */
 export function joinPresence(init: PresenceInit): PresenceHandle {
   active?.leave()

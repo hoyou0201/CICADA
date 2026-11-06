@@ -29,7 +29,10 @@ export default function ClassroomScreen({ navigate }: Props) {
       <div className="overlay">
         <Hud />
         <LecturePanel />
-        <ScreenShareButton />
+        {/* HUD·캐릭터·소리 패널은 왼쪽 위에 겹쳐 있다. 공유 버튼은 그 아래에 둬야 눌린다. */}
+        <div style={{ position: 'absolute', top: 320, left: 'var(--space-4)', zIndex: 2 }}>
+          <ScreenShareButton />
+        </div>
         <ShareGuide />
         <SoundToggle />
         <ProfessorChat />
