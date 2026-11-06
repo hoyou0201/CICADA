@@ -11,6 +11,8 @@ const WALL = '#f1ece1'
 const TRIM = '#8a6a48'
 const GLASS = '#bfe0f2'
 const FRAME = '#e8e2d4'
+const WAINSCOT = '#7fa593'
+const WAINSCOT_H = 1.1
 
 const WINDOW_SIZE: [number, number] = [2.6, 1.6]
 const WINDOW_Y = 2.2
@@ -30,6 +32,16 @@ function Wall({ position, rotationY, size }: { position: Vec3; rotationY: number
     <mesh position={position} rotation={[0, rotationY, 0]} receiveShadow>
       <planeGeometry args={size} />
       <meshStandardMaterial color={WALL} />
+    </mesh>
+  )
+}
+
+// 벽 아랫부분을 두르는 초록색 패널(안쪽으로 살짝 띄워 겹치는 깜빡임을 막는다).
+function Wainscot({ position, rotationY, width }: { position: Vec3; rotationY: number; width: number }) {
+  return (
+    <mesh position={[position[0], WAINSCOT_H / 2, position[2]]} rotation={[0, rotationY, 0]} receiveShadow>
+      <planeGeometry args={[width, WAINSCOT_H]} />
+      <meshStandardMaterial color={WAINSCOT} />
     </mesh>
   )
 }
@@ -126,6 +138,11 @@ export default function Room() {
       <Wall position={[-HALF_WIDTH, height / 2, 0]} rotationY={Math.PI / 2} size={[depth, height]} />
       {/* 오른쪽(창, 게시판) */}
       <Wall position={[HALF_WIDTH, height / 2, 0]} rotationY={-Math.PI / 2} size={[depth, height]} />
+      {/* 아랫벽 패널 */}
+      <Wainscot position={[0, 0, -HALF_DEPTH + 0.005]} rotationY={0} width={width} />
+      <Wainscot position={[0, 0, HALF_DEPTH - 0.005]} rotationY={Math.PI} width={width} />
+      <Wainscot position={[-HALF_WIDTH + 0.005, 0, 0]} rotationY={Math.PI / 2} width={depth} />
+      <Wainscot position={[HALF_WIDTH - 0.005, 0, 0]} rotationY={-Math.PI / 2} width={depth} />
       {/* 걸레받이 */}
       {[
         { p: [0, 0.06, -HALF_DEPTH + 0.01], r: 0, s: width },

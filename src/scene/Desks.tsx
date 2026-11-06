@@ -17,8 +17,15 @@ export default function Desks() {
   const desks = useMemo(() => deskPositions(), [])
   return (
     <group>
-      {desks.map(([x, , z]) => (
+      {desks.map(([x, , z], i) => (
         <group key={`${x}:${z}`}>
+          {/* 책상 위 펼친 책, 자리마다 번갈아 연필꽂이와 책가방 */}
+          <Prop name="open_book" position={[x - 0.3, DESK_GRID.size[1], z]} rotationY={((i % 3) - 1) * 0.15} />
+          {i % 2 === 0 ? (
+            <Prop name="pencil_cup" position={[x + 0.55, DESK_GRID.size[1], z - 0.1]} />
+          ) : (
+            <Prop name="backpack" position={[x + 0.75, 0, z + CHAIR_OFFSET_Z]} rotationY={0.5} />
+          )}
           <Prop name="student_desk" position={[x, 0, z]} scale={DESK_SCALE} />
           <Prop name="student_chair" position={[x, 0, z + CHAIR_OFFSET_Z]} rotationY={Math.PI} scale={CHAIR_SCALE} />
         </group>

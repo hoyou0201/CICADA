@@ -21,6 +21,17 @@ const ITEMS: Item[] = [
   { name: 'bookshelf_tall', position: [-HALF_WIDTH + 0.25, 0, 3.5], rotationY: LEFT },
   { name: 'bookshelf_tall', position: [-3.2, 0, HALF_DEPTH - 0.25], rotationY: Math.PI },
   { name: 'bookshelf_tall', position: [3.2, 0, HALF_DEPTH - 0.25], rotationY: Math.PI },
+  // 교탁과 그 위의 소품
+  { name: 'teacher_desk', position: [3.2, 0, -7.4], scale: 1.1 },
+  { name: 'globe', position: [2.5, 0.84, -7.4], scale: 0.6 },
+  { name: 'books_stack', position: [3.7, 0.84, -7.4], rotationY: 0.4 },
+  { name: 'pencil_cup', position: [3.2, 0.84, -7.6] },
+  // 창문 아래 수납장과 벤치, 문 옆 휴지통, 뒤쪽 시계, 모서리 깃대
+  { name: 'cubby_shelf', position: [HALF_WIDTH - 0.3, 0, -6], rotationY: RIGHT, scale: 1.2 },
+  { name: 'bench', position: [-HALF_WIDTH + 0.3, 0, -1], rotationY: LEFT, scale: 1.2 },
+  { name: 'paper_trash_bin', position: [-HALF_WIDTH + 0.4, 0, 5.4] },
+  { name: 'wall_clock', position: [0, 3, HALF_DEPTH - 0.05], rotationY: Math.PI },
+  { name: 'flagpole', position: [HALF_WIDTH - 0.8, 0, HALF_DEPTH - 0.8], scale: 0.9 },
   // 세계지도와 액자
   { name: 'world_map', position: [-HALF_WIDTH + 0.03, 1.6, -3], rotationY: LEFT },
   { name: 'pictureframe_medium', position: [HALF_WIDTH - 0.03, 2.2, -2], rotationY: RIGHT },
