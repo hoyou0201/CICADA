@@ -13,6 +13,7 @@ import ReactionBar from '../ui/ReactionBar.tsx'
 import RoomSwitcher from '../ui/RoomSwitcher.tsx'
 import ScreenShareButton from '../ui/ScreenShareButton.tsx'
 import ShareGuide from '../ui/ShareGuide.tsx'
+import SoundToggle from '../ui/SoundToggle.tsx'
 import WebGLGate from '../ui/WebGLGate.tsx'
 
 type Props = { navigate: Navigate }
@@ -30,6 +31,7 @@ export default function ClassroomScreen({ navigate }: Props) {
         <LecturePanel />
         <ScreenShareButton />
         <ShareGuide />
+        <SoundToggle />
         <ProfessorChat />
         <AvatarPicker />
         <RoomSwitcher navigate={navigate} />
