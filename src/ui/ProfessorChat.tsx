@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type KeyboardEvent } from 'react'
 import { askProfessor } from '../api/professor.ts'
 import {
   isValidQuestion,
@@ -25,7 +25,7 @@ export default function ProfessorChat() {
   const courseName = lecture ? (courses?.find((c) => c.id === lecture.courseId)?.name ?? null) : null
   const valid = isValidQuestion(question)
 
-  async function submit(event: FormEvent) {
+  async function submit(event: { preventDefault(): void }) {
     event.preventDefault()
     if (!valid || pending) return
     const text = question.trim()
@@ -48,6 +48,14 @@ export default function ProfessorChat() {
     } finally {
       setPending(false)
     }
+  }
+
+  // Enter·Ctrl+Enter는 보내고, Shift+Enter는 줄바꿈이다. 한글 조합 중에는 건드리지 않는다.
+  function onKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== 'Enter' || event.nativeEvent.isComposing) return
+    if (event.shiftKey) return
+    event.preventDefault()
+    void submit(event)
   }
 
   return (
@@ -79,6 +87,7 @@ export default function ProfessorChat() {
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
+              onKeyDown={onKeyDown}
               rows={2}
               placeholder="궁금한 점을 물어보세요"
               aria-label="질문"

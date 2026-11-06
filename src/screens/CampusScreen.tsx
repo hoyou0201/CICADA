@@ -6,7 +6,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type ReactNode,
 } from 'react'
 import type { Group } from 'three'
@@ -26,16 +25,18 @@ import {
   WALK_BOUNDS,
 } from '../scene/campus/layout.ts'
 import FollowCamera from '../scene/player/FollowCamera.tsx'
-import { pickFloor } from '../scene/player/useClickToMove.ts'
+import { listenTap, pickFloor } from '../scene/player/useClickToMove.ts'
 import {
   WALK_SPEED,
   isTypingTarget,
+  releaseMenuFocus,
   type StepResult,
 } from '../scene/player/usePlayerControls.ts'
 import { useStore, type Position } from '../state/store.ts'
 import AvatarPicker from '../ui/AvatarPicker.tsx'
 import Hud from '../ui/Hud.tsx'
 import InviteQr from '../ui/InviteQr.tsx'
+import Sidebar from '../ui/Sidebar.tsx'
 import Loading from '../ui/Loading.tsx'
 import ReactionBar from '../ui/ReactionBar.tsx'
 import { anonymousNumber, loadNickname, resolveNickname } from '../ui/nickname.ts'
@@ -68,15 +69,6 @@ const KEY_DIRECTIONS: Record<string, Position> = {
   ArrowLeft: { x: -1, z: 0 },
   KeyD: { x: 1, z: 0 },
   ArrowRight: { x: 1, z: 0 },
-}
-
-const TOP_RIGHT_STYLE: CSSProperties = {
-  position: 'absolute',
-  top: 'var(--space-4)',
-  right: 'var(--space-4)',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 'var(--space-2)',
 }
 
 function clampToHallwayBounds(p: Position): Position {
@@ -165,6 +157,7 @@ function useHallwayControls(): void {
     const onKeyDown = (e: KeyboardEvent) => {
       if (!(e.code in KEY_DIRECTIONS)) return
       if (isTypingTarget(e.target) || e.ctrlKey || e.metaKey || e.altKey) return
+      releaseMenuFocus(e.target)
       keys.add(e.code)
       e.preventDefault()
       if (useStore.getState().moveTarget) useStore.getState().setMoveTarget(null)
@@ -186,8 +179,7 @@ function useHallwayControls(): void {
 
   useEffect(() => {
     const canvas = gl.domElement
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.button !== 0) return
+    return listenTap(canvas, (e) => {
       const rect = canvas.getBoundingClientRect()
       if (rect.width === 0 || rect.height === 0) return
       const ndc = {
@@ -196,9 +188,7 @@ function useHallwayControls(): void {
       }
       const point = pickFloor(ndc, camera)
       if (point) useStore.getState().setMoveTarget(clampToHallwayBounds(point))
-    }
-    canvas.addEventListener('pointerdown', onPointerDown)
-    return () => canvas.removeEventListener('pointerdown', onPointerDown)
+    })
   }, [gl, camera])
 
   useFrame((_, delta) => {
@@ -351,15 +341,16 @@ export default function CampusScreen({ navigate }: Props) {
         </Suspense>
       </SceneErrorBoundary>
       <div className="overlay">
-        <Hud />
-        <AvatarPicker />
-        <div className="panel" style={TOP_RIGHT_STYLE}>
+        {/* 강의실 화면과 같이 패널을 사이드바 한 곳에 세로로 쌓는다. 따로 좌표를 주면 서로 겹친다. */}
+        <Sidebar>
           <button type="button" className="btn" onClick={() => handleNavigate('rooms')}>
             강의실 목록
           </button>
-        </div>
+          <Hud />
+          <AvatarPicker />
+          <InviteQr />
+        </Sidebar>
         <ReactionBar />
-        <InviteQr />
       </div>
     </div>
   )
