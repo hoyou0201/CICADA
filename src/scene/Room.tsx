@@ -1,16 +1,17 @@
-import Prop from './Prop.tsx'
+import { useMemo } from 'react'
+import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from 'three'
 import { EXIT_DOOR, HALF_DEPTH, HALF_WIDTH, ROOM, type Vec3 } from './layout.ts'
 
-const FLOOR = '#b89b72'
-
-// 바닥은 4m 나무 타일을 방 크기에 맞춰 깐다(밝은 타일과 어두운 타일을 번갈아).
-const TILE_COLS = 4
-const TILE_ROWS = 6
-const TILE_TOP = 0.05 // 타일 모델에서 윗면 높이
+// 바닥은 canvas로 그린 회색 카펫 타일 무늬를 한 장짜리 판에 반복해서 입힌다(2m 한 칸, 타일 0.5m).
+const FLOOR_TILE_M = 2
+const CARPET_COLORS = ['#9aa3ad', '#949da8', '#a1a9b3', '#97a0ab', '#9ea6b0']
+const CARPET_SEAM = '#838c97'
 const WALL = '#f1ece1'
 const TRIM = '#8a6a48'
 const GLASS = '#bfe0f2'
 const FRAME = '#e8e2d4'
+const WAINSCOT = '#b08968' // 앞벽 목재 패널
+const WAINSCOT_H = 4
 
 const WINDOW_SIZE: [number, number] = [2.6, 1.6]
 const WINDOW_Y = 2.2
@@ -30,6 +31,16 @@ function Wall({ position, rotationY, size }: { position: Vec3; rotationY: number
     <mesh position={position} rotation={[0, rotationY, 0]} receiveShadow>
       <planeGeometry args={size} />
       <meshStandardMaterial color={WALL} />
+    </mesh>
+  )
+}
+
+// 벽에 붙이는 목재 패널(안쪽으로 살짝 띄워 겹치는 깜빡임을 막는다).
+function Wainscot({ position, rotationY, width }: { position: Vec3; rotationY: number; width: number }) {
+  return (
+    <mesh position={[position[0], WAINSCOT_H / 2, position[2]]} rotation={[0, rotationY, 0]} receiveShadow>
+      <planeGeometry args={[width, WAINSCOT_H]} />
+      <meshStandardMaterial color={WAINSCOT} />
     </mesh>
   )
 }
@@ -95,29 +106,46 @@ function DoorFrame() {
   )
 }
 
+function makeFloorTexture() {
+  const size = 512
+  const tiles = 4
+  const w = size / tiles
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = size
+  const ctx = canvas.getContext('2d')
+  if (ctx) {
+    for (let r = 0; r < tiles; r++) {
+      for (let c = 0; c < tiles; c++) {
+        ctx.fillStyle = CARPET_COLORS[(r * 3 + c * 2) % CARPET_COLORS.length]
+        ctx.fillRect(c * w, r * w, w, w)
+      }
+    }
+    ctx.fillStyle = CARPET_SEAM
+    for (let i = 0; i < tiles; i++) {
+      ctx.fillRect(i * w, 0, 2, size)
+      ctx.fillRect(0, i * w, size, 2)
+    }
+  }
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  texture.wrapS = texture.wrapT = RepeatWrapping
+  texture.anisotropy = 8
+  return texture
+}
+
 export default function Room() {
   const { width, depth, height } = ROOM
+  const floorTexture = useMemo(() => {
+    const texture = makeFloorTexture()
+    texture.repeat.set(width / FLOOR_TILE_M, depth / FLOOR_TILE_M)
+    return texture
+  }, [width, depth])
   return (
     <group>
-      {/* 타일이 안 불러와져도 바닥이 비지 않게 깔아 두는 판(타일보다 조금 아래) */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[width, depth]} />
-        <meshStandardMaterial color={FLOOR} />
+        <meshStandardMaterial map={floorTexture} />
       </mesh>
-      {Array.from({ length: TILE_COLS * TILE_ROWS }, (_, i) => {
-        const col = i % TILE_COLS
-        const row = Math.floor(i / TILE_COLS)
-        const x = (col + 0.5) * (width / TILE_COLS) - width / 2
-        const z = (row + 0.5) * (depth / TILE_ROWS) - depth / 2
-        return (
-          <Prop
-            key={i}
-            name={(col + row) % 2 === 0 ? 'floor_wood_large' : 'floor_wood_large_dark'}
-            position={[x, -TILE_TOP, z]}
-            scale={[width / TILE_COLS / 4, 1, depth / TILE_ROWS / 4]}
-          />
-        )
-      })}
       {/* 앞(칠판) */}
       <Wall position={[0, height / 2, -HALF_DEPTH]} rotationY={0} size={[width, height]} />
       {/* 뒤 */}
@@ -126,6 +154,8 @@ export default function Room() {
       <Wall position={[-HALF_WIDTH, height / 2, 0]} rotationY={Math.PI / 2} size={[depth, height]} />
       {/* 오른쪽(창) */}
       <Wall position={[HALF_WIDTH, height / 2, 0]} rotationY={-Math.PI / 2} size={[depth, height]} />
+      {/* 앞벽 목재 패널(칠판 뒤) */}
+      <Wainscot position={[0, 0, -HALF_DEPTH + 0.005]} rotationY={0} width={width} />
       {/* 걸레받이 */}
       {[
         { p: [0, 0.06, -HALF_DEPTH + 0.01], r: 0, s: width },
