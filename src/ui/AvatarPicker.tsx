@@ -6,6 +6,7 @@ import {
   ACCESSORIES,
   AVATAR_COLORS,
   AVATAR_PRESETS,
+  STUDENT_MODEL_PRESET,
   getPreset,
   HAIR_STYLES,
   type Accessory,
@@ -83,6 +84,13 @@ export default function AvatarPicker() {
     if (next) change({ ...draft, preset: next.id })
   }
 
+  const isModel = preset.model !== undefined
+
+  function selectKind(kind: string) {
+    if (kind === STUDENT_MODEL_PRESET.id) change({ ...draft, preset: STUDENT_MODEL_PRESET.id })
+    else selectStyle(preset.hair, preset.accessory)
+  }
+
   function save() {
     setAvatar(draft)
     setSaveState(saveAvatar(draft) ? 'saved' : 'not-persisted')
@@ -107,20 +115,27 @@ export default function AvatarPicker() {
             </Canvas>
           </div>
           <label>
+            종류
+            <select value={isModel ? STUDENT_MODEL_PRESET.id : 'shape'} onChange={(event) => selectKind(event.target.value)}>
+              <option value="shape">기본 도형</option>
+              <option value={STUDENT_MODEL_PRESET.id}>{STUDENT_MODEL_PRESET.name}</option>
+            </select>
+          </label>
+          <label>
             머리 모양
-            <select value={preset.hair} onChange={(event) => selectStyle(event.target.value as HairStyle, preset.accessory)}>
+            <select value={preset.hair} disabled={isModel} onChange={(event) => selectStyle(event.target.value as HairStyle, preset.accessory)}>
               {HAIR_STYLES.map((hair) => <option key={hair.id} value={hair.id}>{hair.name}</option>)}
             </select>
           </label>
           <label>
             소품
-            <select value={preset.accessory} onChange={(event) => selectStyle(preset.hair, event.target.value as Accessory)}>
+            <select value={preset.accessory} disabled={isModel} onChange={(event) => selectStyle(preset.hair, event.target.value as Accessory)}>
               {ACCESSORIES.map((accessory) => <option key={accessory.id} value={accessory.id}>{accessory.name}</option>)}
             </select>
           </label>
           <label>
             몸 색
-            <select value={draft.color} onChange={(event) => change({ ...draft, color: event.target.value })}>
+            <select value={draft.color} disabled={isModel} onChange={(event) => change({ ...draft, color: event.target.value })}>
               {!AVATAR_COLORS.some((color) => color === draft.color) && <option value={draft.color}>현재 색</option>}
               {AVATAR_COLORS.map((color, index) => <option key={color} value={color}>{COLOR_NAMES[index]}</option>)}
             </select>

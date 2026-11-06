@@ -11,6 +11,8 @@ export type AvatarPreset = {
   eye: { radius: number; spacing: number }
   hair: HairStyle
   accessory: Accessory
+  /** GLB 모델 주소. 있으면 도형 대신 이 모델을 그리고, 못 불러오면 도형으로 대체한다. */
+  model?: string
 }
 
 export const DEFAULT_PRESET_ID = 'round'
@@ -36,7 +38,7 @@ export const ACCESSORIES: readonly { id: Accessory; name: string }[] = [
   { id: 'glasses', name: '안경' },
 ]
 
-export const AVATAR_PRESETS: readonly AvatarPreset[] = HAIR_STYLES.flatMap((hair, index) =>
+const SHAPE_PRESETS: readonly AvatarPreset[] = HAIR_STYLES.flatMap((hair, index) =>
   ACCESSORIES.map((accessory) => ({
     ...SHAPE,
     id: index === 0 && accessory.id === 'none' ? DEFAULT_PRESET_ID : `${hair.id}-${accessory.id}`,
@@ -45,6 +47,19 @@ export const AVATAR_PRESETS: readonly AvatarPreset[] = HAIR_STYLES.flatMap((hair
     accessory: accessory.id,
   })),
 )
+
+
+/** GLB 모델 프리셋. 못 불러올 때 대신 그릴 도형은 hair/accessory가 정한다. */
+export const STUDENT_MODEL_PRESET: AvatarPreset = {
+  ...SHAPE,
+  id: 'student-1',
+  name: '학생 모델 1',
+  hair: 'short',
+  accessory: 'none',
+  model: '/models/student-1.glb',
+}
+
+export const AVATAR_PRESETS: readonly AvatarPreset[] = [...SHAPE_PRESETS, STUDENT_MODEL_PRESET]
 
 /** 모르는 id면 기본 프리셋을 준다(오류 시 기본 캐릭터). */
 export function getPreset(id: string): AvatarPreset {

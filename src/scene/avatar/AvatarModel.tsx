@@ -24,8 +24,8 @@ export default function AvatarModel({ nickname, avatar, status, moving = false }
   const preset = getPreset(avatar.preset)
   const color = avatar.color || DEFAULT_AVATAR_COLOR
   const { body, head, eye } = preset
-  // 프리셋이 GLB를 가리키면(`model`) 그 모델을 그린다. 프리셋 타입에 `model?: string`이 생기면 이 단언을 없앤다.
-  const modelUrl = (preset as { model?: string }).model
+  // 프리셋이 GLB를 가리키면(`model`) 그 모델을 그린다.
+  const modelUrl = preset.model
 
   const bodyCenterY = body.radius + body.length / 2
   const headY = body.radius * 2 + body.length + head.radius * 0.6
