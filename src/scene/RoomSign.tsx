@@ -1,4 +1,4 @@
-import { Html } from '@react-three/drei'
+import Html from './SafeHtml.tsx'
 import { useEffect, useMemo } from 'react'
 import { CanvasTexture, SRGBColorSpace } from 'three'
 import { ROOMS } from '../rooms.ts'

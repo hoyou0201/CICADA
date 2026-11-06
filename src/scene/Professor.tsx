@@ -1,4 +1,4 @@
-import { Html } from '@react-three/drei'
+import Html from './SafeHtml.tsx'
 import { useEffect } from 'react'
 import { useStore } from '../state/store.ts'
 import { PROFESSOR } from './layout.ts'
