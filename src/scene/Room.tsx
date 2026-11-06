@@ -1,6 +1,12 @@
+import Prop from './Prop.tsx'
 import { EXIT_DOOR, HALF_DEPTH, HALF_WIDTH, ROOM, type Vec3 } from './layout.ts'
 
 const FLOOR = '#b89b72'
+
+// 바닥은 4m 나무 타일을 방 크기에 맞춰 깐다(밝은 타일과 어두운 타일을 번갈아).
+const TILE_COLS = 4
+const TILE_ROWS = 6
+const TILE_TOP = 0.05 // 타일 모델에서 윗면 높이
 const WALL = '#f1ece1'
 const TRIM = '#8a6a48'
 const GLASS = '#bfe0f2'
@@ -93,10 +99,25 @@ export default function Room() {
   const { width, depth, height } = ROOM
   return (
     <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+      {/* 타일이 안 불러와져도 바닥이 비지 않게 깔아 두는 판(타일보다 조금 아래) */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
         <planeGeometry args={[width, depth]} />
         <meshStandardMaterial color={FLOOR} />
       </mesh>
+      {Array.from({ length: TILE_COLS * TILE_ROWS }, (_, i) => {
+        const col = i % TILE_COLS
+        const row = Math.floor(i / TILE_COLS)
+        const x = (col + 0.5) * (width / TILE_COLS) - width / 2
+        const z = (row + 0.5) * (depth / TILE_ROWS) - depth / 2
+        return (
+          <Prop
+            key={i}
+            name={(col + row) % 2 === 0 ? 'floor_wood_large' : 'floor_wood_large_dark'}
+            position={[x, -TILE_TOP, z]}
+            scale={[width / TILE_COLS / 4, 1, depth / TILE_ROWS / 4]}
+          />
+        )
+      })}
       {/* 앞(칠판) */}
       <Wall position={[0, height / 2, -HALF_DEPTH]} rotationY={0} size={[width, height]} />
       {/* 뒤 */}

@@ -5,11 +5,11 @@ import { useReactions, type ReactionKind } from '../../room/reactions'
 
 /**
  * 아바타의 리액션 동작. 리액션을 받으면(내 것 포함) 그 아바타가 2초 동안
- * 끄덕이거나(끄덕), 손을 들거나(손들기), Zzz를 띄운다(졸기).
+ * 끄덕이거나(끄덕), 손을 들거나(손들기: 모델의 손들기 동작), Zzz를 띄운다(졸기).
  * 저장소(`useReactions`)의 리액션은 더 오래 남아 있어도(버튼 눌림 표시용) 동작은 2초만 한다.
  *
- * 사용: 아바타 모델을 `<Reaction reactionKey=…>…</Reaction>`로 감싼다. 몸을 감싼 group이
- * '끄덕'일 때 숙였다 들고, 손 들기·Zzz는 그 옆에 덧붙는다.
+ * 사용: `<Reaction reactionKey=…>{(reaction) => 모델}</Reaction>`. 몸을 감싼 group이
+ * '끄덕'일 때 숙였다 들고, 손들기 동작은 모델이 재생하며, Zzz는 그 옆에 덧붙는다.
  */
 
 const REACTION_EFFECT_MS = 2000
@@ -17,8 +17,10 @@ const EFFECT_SECONDS = REACTION_EFFECT_MS / 1000
 
 type ActiveReaction = { kind: ReactionKind; at: number }
 
-type Body = { radius: number; length: number }
-type Head = { radius: number }
+// 모델 키(AVATAR_HEIGHT) 기준 위치. 이름표 아래, 머리 옆에서 Zzz가 시작한다.
+const HEAD_SIDE = 0.3
+const ZZZ_BASE_Y = 1.25
+const NOD_PIVOT_Y = 0.4
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value))
 
@@ -26,15 +28,6 @@ const clamp01 = (value: number) => Math.min(1, Math.max(0, value))
 function nodAngle(progress: number): number {
   const p = clamp01(progress)
   return Math.abs(Math.sin(p * Math.PI * 2)) * 0.5 * (1 - p * 0.3)
-}
-
-/** 팔 들기: 처음 0.3초에 올리고, 이후 좌우로 살짝 흔든다. 반환값은 어깨 기준 z 회전. */
-function handAngle(progress: number): number {
-  const p = clamp01(progress)
-  const raise = clamp01(p / 0.15)
-  const eased = 1 - (1 - raise) * (1 - raise)
-  const wave = Math.sin(p * Math.PI * 8) * 0.18 * eased
-  return (Math.PI - 0.3) * eased + wave
 }
 
 /**
@@ -64,31 +57,6 @@ function useProgress() {
   }
 }
 
-const ARM_LENGTH = 0.42
-const ARM_RADIUS = 0.055
-
-function RaisedHand({ active, color, body }: { active: ActiveReaction; color: string; body: Body }) {
-  const arm = useRef<Group>(null)
-  const progress = useProgress()
-
-  useFrame(({ clock }) => {
-    if (arm.current) arm.current.rotation.z = handAngle(progress(active, clock.elapsedTime))
-  })
-
-  return (
-    <group ref={arm} position={[body.radius + 0.02, body.radius + body.length * 0.9, 0]}>
-      <mesh position={[0, -ARM_LENGTH / 2, 0]}>
-        <capsuleGeometry args={[ARM_RADIUS, ARM_LENGTH - ARM_RADIUS * 2, 6, 12]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-      <mesh position={[0, -ARM_LENGTH - 0.02, 0]}>
-        <sphereGeometry args={[ARM_RADIUS * 1.5, 12, 8]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    </group>
-  )
-}
-
 // 글꼴을 따로 받지 않으려고 canvas에 글자를 그려 스프라이트로 쓴다(Html 대신: 정리할 때 별도 root가 생기지 않게).
 function makeLetterTexture(letter: string) {
   const canvas = document.createElement('canvas')
@@ -112,14 +80,14 @@ function makeLetterTexture(letter: string) {
 
 const Z_LETTERS = ['Z', 'z', 'z'] as const
 
-function Zzz({ active, body, head }: { active: ActiveReaction; body: Body; head: Head }) {
+function Zzz({ active }: { active: ActiveReaction }) {
   const sprites = useRef<(Sprite | null)[]>([])
   const progress = useProgress()
   const textures = useMemo(() => Z_LETTERS.map(makeLetterTexture), [])
   useEffect(() => () => textures.forEach((texture) => texture.dispose()), [textures])
 
   // 머리 옆에서 시작해 위로 떠오른다(머리 위 이름표와 겹치지 않게 옆으로 비킨다).
-  const baseY = body.radius * 2 + body.length + head.radius * 0.6 + 0.1
+  const baseY = ZZZ_BASE_Y
 
   useFrame(({ clock }) => {
     const t = progress(active, clock.elapsedTime)
@@ -127,7 +95,7 @@ function Zzz({ active, body, head }: { active: ActiveReaction; body: Body; head:
       if (!sprite) return
       // 글자마다 0.2씩 늦게 시작해서 위로 떠오르며 사라진다.
       const p = clamp01((t - index * 0.2) / 0.6)
-      sprite.position.set(head.radius + 0.18 + index * 0.1 + p * 0.1, baseY + index * 0.1 + p * 0.3, 0.05)
+      sprite.position.set(HEAD_SIDE + 0.18 + index * 0.1 + p * 0.1, baseY + index * 0.1 + p * 0.3, 0.05)
       sprite.material.opacity = p <= 0 ? 0 : p < 0.2 ? p / 0.2 : 1 - (p - 0.2) / 0.8
       const size = (0.3 + index * 0.07) * (0.8 + p * 0.4)
       sprite.scale.set(size, size, 1)
@@ -153,14 +121,11 @@ function Zzz({ active, body, head }: { active: ActiveReaction; body: Body; head:
 type Props = {
   /** 이 아바타 주인의 presence key(내 아바타면 저장소의 selfKey). 없으면 효과를 보이지 않는다 */
   reactionKey: string | undefined
-  color: string
-  body: Body
-  head: Head
-  /** 아바타 모델(도형 또는 GLB) */
-  children: ReactNode
+  /** 아바타 모델. 지금 재생 중인 리액션 종류(없으면 null)를 받는다 */
+  children: (reaction: ReactionKind | null) => ReactNode
 }
 
-export default function Reaction({ reactionKey, color, body, head, children }: Props) {
+export default function Reaction({ reactionKey, children }: Props) {
   const active = useActiveReaction(reactionKey)
   const nod = useRef<Group>(null)
   const progress = useProgress()
@@ -171,15 +136,12 @@ export default function Reaction({ reactionKey, color, body, head, children }: P
   })
 
   // 허리 높이를 축으로 상체가 숙여지도록, 축 위치로 올린 group 안에서 모델을 원래 높이로 내린다.
-  const pivotY = body.radius + body.length * 0.3
-
   return (
     <>
-      <group ref={nod} position={[0, pivotY, 0]}>
-        <group position={[0, -pivotY, 0]}>{children}</group>
+      <group ref={nod} position={[0, NOD_PIVOT_Y, 0]}>
+        <group position={[0, -NOD_PIVOT_Y, 0]}>{children(active?.kind ?? null)}</group>
       </group>
-      {active?.kind === 'hand' && <RaisedHand active={active} color={color} body={body} />}
-      {active?.kind === 'sleep' && <Zzz active={active} body={body} head={head} />}
+      {active?.kind === 'sleep' && <Zzz active={active} />}
     </>
   )
 }

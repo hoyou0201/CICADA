@@ -2,19 +2,9 @@ import { Canvas } from '@react-three/fiber'
 import { useEffect, useState } from 'react'
 import type { AvatarLook } from '../contract/room.ts'
 import AvatarModel from '../scene/avatar/AvatarModel.tsx'
-import {
-  ACCESSORIES,
-  AVATAR_COLORS,
-  AVATAR_PRESETS,
-  STUDENT_MODEL_PRESET,
-  getPreset,
-  HAIR_STYLES,
-  type Accessory,
-  type HairStyle,
-} from '../scene/avatar/presets.ts'
+import { AVATAR_PRESETS, DEFAULT_AVATAR_COLOR } from '../scene/avatar/presets.ts'
 import { DEFAULT_AVATAR, useStore } from '../state/store.ts'
 
-const COLOR_NAMES = ['파랑', '하늘색', '분홍', '노랑', '초록', '보라', '주황']
 const AVATAR_STORAGE_KEY = 'cicada.avatar'
 
 // 사생활 보호 모드 등으로 localStorage를 못 쓰면 저장 없이 동작한다.
@@ -33,10 +23,9 @@ function loadAvatar(): AvatarLook | null {
     if (!raw) return null
     const value: unknown = JSON.parse(raw)
     if (typeof value !== 'object' || value === null) return null
-    const { preset, color } = value as Record<string, unknown>
-    if (typeof preset !== 'string' || typeof color !== 'string') return null
-    if (!AVATAR_PRESETS.some((item) => item.id === preset) || !/^#[0-9a-fA-F]{6}$/.test(color)) return null
-    return { preset, color }
+    const { preset } = value as Record<string, unknown>
+    if (typeof preset !== 'string' || !AVATAR_PRESETS.some((item) => item.id === preset)) return null
+    return { preset, color: DEFAULT_AVATAR_COLOR }
   } catch {
     return null
   }
@@ -59,8 +48,7 @@ export default function AvatarPicker() {
   const setAvatar = useStore((s) => s.setAvatar)
   const [draft, setDraft] = useState<AvatarLook>(avatar)
   const [saveState, setSaveState] = useState<SaveState>('idle')
-  const preset = getPreset(draft.preset)
-  const dirty = draft.preset !== avatar.preset || draft.color !== avatar.color
+  const dirty = draft.preset !== avatar.preset
 
   // 저장해 둔 아바타가 있으면 접속할 때 불러온다. 없으면 기본 캐릭터 그대로.
   useEffect(() => {
@@ -77,18 +65,6 @@ export default function AvatarPicker() {
   function change(next: AvatarLook) {
     setDraft(next)
     setSaveState('idle')
-  }
-
-  function selectStyle(hair: HairStyle, accessory: Accessory) {
-    const next = AVATAR_PRESETS.find((item) => item.hair === hair && item.accessory === accessory)
-    if (next) change({ ...draft, preset: next.id })
-  }
-
-  const isModel = preset.model !== undefined
-
-  function selectKind(kind: string) {
-    if (kind === STUDENT_MODEL_PRESET.id) change({ ...draft, preset: STUDENT_MODEL_PRESET.id })
-    else selectStyle(preset.hair, preset.accessory)
   }
 
   function save() {
@@ -115,29 +91,9 @@ export default function AvatarPicker() {
             </Canvas>
           </div>
           <label>
-            종류
-            <select value={isModel ? STUDENT_MODEL_PRESET.id : 'shape'} onChange={(event) => selectKind(event.target.value)}>
-              <option value="shape">기본 도형</option>
-              <option value={STUDENT_MODEL_PRESET.id}>{STUDENT_MODEL_PRESET.name}</option>
-            </select>
-          </label>
-          <label>
-            머리 모양
-            <select value={preset.hair} disabled={isModel} onChange={(event) => selectStyle(event.target.value as HairStyle, preset.accessory)}>
-              {HAIR_STYLES.map((hair) => <option key={hair.id} value={hair.id}>{hair.name}</option>)}
-            </select>
-          </label>
-          <label>
-            소품
-            <select value={preset.accessory} disabled={isModel} onChange={(event) => selectStyle(preset.hair, event.target.value as Accessory)}>
-              {ACCESSORIES.map((accessory) => <option key={accessory.id} value={accessory.id}>{accessory.name}</option>)}
-            </select>
-          </label>
-          <label>
-            몸 색
-            <select value={draft.color} disabled={isModel} onChange={(event) => change({ ...draft, color: event.target.value })}>
-              {!AVATAR_COLORS.some((color) => color === draft.color) && <option value={draft.color}>현재 색</option>}
-              {AVATAR_COLORS.map((color, index) => <option key={color} value={color}>{COLOR_NAMES[index]}</option>)}
+            캐릭터
+            <select value={draft.preset} onChange={(event) => change({ ...draft, preset: event.target.value })}>
+              {AVATAR_PRESETS.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </select>
           </label>
           <div style={{ display: 'flex', gap: 'var(--space-2)' }}>

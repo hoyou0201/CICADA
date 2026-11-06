@@ -1,10 +1,8 @@
 import Html from '../SafeHtml'
 import type { AvatarLook, PresenceStatus } from '../../contract/room'
 import { useReactions } from '../../room/reactions'
-import { DEFAULT_AVATAR_COLOR, getPreset } from './presets'
-import { useWalkAnim } from './useWalkAnim'
-import GlbAvatar from './GlbAvatar'
-import Hair from './Hair'
+import { getPreset } from './presets'
+import GlbAvatar, { AVATAR_HEIGHT } from './GlbAvatar'
 import Reaction from './Reaction'
 
 export const WATCHING_LABEL = '수강 중'
@@ -13,7 +11,7 @@ type Props = {
   nickname: string
   avatar: AvatarLook
   status: PresenceStatus
-  /** 움직이는 중이면 통통 튀고, 아니면 숨쉬듯 움직인다 */
+  /** 움직이는 중이면 걷는 동작, 아니면 가만히 서 있는 동작 */
   moving?: boolean
   /** 이 아바타가 나라면 true. 내가 보낸 리액션(저장소 selfKey)으로 끄덕·손들기·Zzz를 보여 준다 */
   isSelf?: boolean
@@ -21,79 +19,29 @@ type Props = {
   reactionKey?: string
 }
 
-const FACE_COLOR = '#2b2b3a'
-const AWAY_OPACITY = 0.5
+const LABEL_GAP = 0.35
 
-/** 원점이 발 아래인 캡슐·구 조합 아바타. 위치와 회전은 부모 group이 정한다. */
+/** 원점이 발 아래인 GLB 캐릭터 아바타. 위치와 회전은 부모 group이 정한다. */
 export default function AvatarModel({ nickname, avatar, status, moving = false, isSelf = false, reactionKey }: Props) {
-  const bodyRef = useWalkAnim(moving)
   const selfKey = useReactions((state) => state.selfKey)
   const preset = getPreset(avatar.preset)
-  const color = avatar.color || DEFAULT_AVATAR_COLOR
-  const { body, head, eye } = preset
-  // 프리셋이 GLB를 가리키면(`model`) 그 모델을 그린다.
-  const modelUrl = preset.model
-
-  const bodyCenterY = body.radius + body.length / 2
-  const headY = body.radius * 2 + body.length + head.radius * 0.6
-  const labelY = headY + head.radius * 1.8 + 0.2
   const away = status === 'away'
-
-  // 기본 도형 아바타. GLB를 쓰지 않거나, 불러오는 중이거나, 불러오기에 실패했을 때 그린다.
-  const shapes = (
-      <group ref={bodyRef}>
-        <mesh position={[0, bodyCenterY, 0]}>
-          <capsuleGeometry args={[body.radius, body.length, 8, 16]} />
-          <meshStandardMaterial color={color} transparent={away} opacity={away ? AWAY_OPACITY : 1} />
-        </mesh>
-        <mesh position={[0, headY, 0]}>
-          <sphereGeometry args={[head.radius, 24, 16]} />
-          <meshStandardMaterial color={color} transparent={away} opacity={away ? AWAY_OPACITY : 1} />
-        </mesh>
-        <group position={[0, headY, 0]}>
-          <Hair style={preset.hair} radius={head.radius} away={away} />
-          {preset.accessory === 'hat' && (
-            <group position={[0, head.radius * 1.05, 0]}>
-              <mesh>
-                <cylinderGeometry args={[head.radius * 1.15, head.radius * 1.15, 0.045, 24]} />
-                <meshStandardMaterial color="#465c91" transparent={away} opacity={away ? AWAY_OPACITY : 1} />
-              </mesh>
-              <mesh position={[0, head.radius * 0.32, 0]}>
-                <cylinderGeometry args={[head.radius * 0.62, head.radius * 0.78, head.radius * 0.65, 24]} />
-                <meshStandardMaterial color="#465c91" transparent={away} opacity={away ? AWAY_OPACITY : 1} />
-              </mesh>
-            </group>
-          )}
-          {preset.accessory === 'glasses' && (
-            <group position={[0, 0.03, head.radius * 0.96]}>
-              {[-1, 1].map((side) => (
-                <mesh key={side} position={[side * eye.spacing, 0, 0]}>
-                  <torusGeometry args={[eye.radius * 1.65, 0.012, 8, 24]} />
-                  <meshStandardMaterial color={FACE_COLOR} transparent={away} opacity={away ? AWAY_OPACITY : 1} />
-                </mesh>
-              ))}
-              <mesh>
-                <boxGeometry args={[eye.spacing * 0.6, 0.018, 0.018]} />
-                <meshStandardMaterial color={FACE_COLOR} transparent={away} opacity={away ? AWAY_OPACITY : 1} />
-              </mesh>
-            </group>
-          )}
-        </group>
-        {[-1, 1].map((side) => (
-          <mesh key={side} position={[side * eye.spacing, headY + 0.03, head.radius * 0.9]}>
-            <sphereGeometry args={[eye.radius, 12, 8]} />
-            <meshStandardMaterial color={FACE_COLOR} />
-          </mesh>
-        ))}
-      </group>
-  )
 
   return (
     <group>
-      <Reaction reactionKey={isSelf ? selfKey : reactionKey} color={color} body={body} head={head}>
-        {modelUrl ? <GlbAvatar url={modelUrl} moving={moving} away={away} fallback={shapes} /> : shapes}
+      <Reaction reactionKey={isSelf ? selfKey : reactionKey}>
+        {(reaction) => (
+          <GlbAvatar
+            url={preset.model}
+            idleClip={preset.idleClip}
+            activeClip={preset.walkClip}
+            overrideClip={reaction === 'hand' ? preset.handClip : undefined}
+            moving={moving}
+            away={away}
+          />
+        )}
       </Reaction>
-      <Html position={[0, labelY, 0]} center distanceFactor={8} zIndexRange={[0, 0]} style={{ pointerEvents: 'none' }}>
+      <Html position={[0, AVATAR_HEIGHT + LABEL_GAP, 0]} center distanceFactor={8} zIndexRange={[0, 0]} style={{ pointerEvents: 'none' }}>
         <div style={{ textAlign: 'center', whiteSpace: 'nowrap', fontSize: 14 }}>
           <div
             style={{
