@@ -24,7 +24,7 @@ export const DESK_GRID = {
   spacingX: 3.5,
   spacingZ: 2.6,
   frontZ: -3.5, // 첫 줄 책상의 z
-  size: [1.6, 0.75, 0.7] as Vec3, // 가로·높이·세로
+  size: [2.6, 0.75, 0.7] as Vec3, // 가로·높이·세로(2인용 긴 책상)
 } as const
 
 // 책상 가운데 위치 목록(앞줄 왼쪽부터).

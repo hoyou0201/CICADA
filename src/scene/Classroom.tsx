@@ -4,7 +4,7 @@ import Blackboard from './Blackboard.tsx'
 import Decor from './Decor.tsx'
 import Desks from './Desks.tsx'
 import ExitDoor from './ExitDoor.tsx'
-import KoreanDecor from './KoreanDecor.tsx'
+import LectureDecor from './LectureDecor.tsx'
 import Lighting from './Lighting.tsx'
 import NoticeBoard from './NoticeBoard.tsx'
 import Player from './Player.tsx'
@@ -23,7 +23,7 @@ export default function Classroom({ navigate }: Props) {
       <Room />
       <Desks />
       <Decor />
-      <KoreanDecor />
+      <LectureDecor />
       <Blackboard />
       <Professor />
       <NoticeBoard />

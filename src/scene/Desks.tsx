@@ -14,9 +14,10 @@ const CHAIR_OFFSET_Z = 0.6
 const CHAIR_SCALE = 1
 
 // 소품을 놓을 책상 번호(앞줄 왼쪽부터 0). 겹치지 않게 흩어 둔다.
-const BOOK_DESKS = new Set([0, 5, 10])
-const CUP_DESKS = new Set([6])
+const BOOK_DESKS = new Set([0, 4, 7, 10])
 const BAG_DESKS = new Set([3, 8])
+// 2인용 책상이라 의자를 양옆에 하나씩 놓는다.
+const SEAT_OFFSET_X = 0.65
 
 export default function Desks() {
   const desks = useMemo(() => deskPositions(), [])
@@ -25,11 +26,12 @@ export default function Desks() {
       {desks.map(([x, , z], i) => (
         <group key={`${x}:${z}`}>
           {/* 일부 자리에만 소품을 둔다(전부 두면 어수선하다) */}
-          {BOOK_DESKS.has(i) && <Prop name="open_book" position={[x - 0.3, DESK_GRID.size[1], z]} rotationY={0.15} />}
-          {CUP_DESKS.has(i) && <Prop name="pencil_cup" position={[x + 0.55, DESK_GRID.size[1], z - 0.1]} />}
-          {BAG_DESKS.has(i) && <Prop name="backpack" position={[x + 0.75, 0, z + CHAIR_OFFSET_Z]} rotationY={0.5} />}
+          {BOOK_DESKS.has(i) && <Prop name="open_book" position={[x - 0.6, DESK_GRID.size[1], z]} rotationY={0.15} />}
+          {BAG_DESKS.has(i) && <Prop name="backpack" position={[x + 1.25, 0, z + CHAIR_OFFSET_Z]} rotationY={0.5} />}
           <Prop name="student_desk" position={[x, 0, z]} scale={DESK_SCALE} />
-          <Prop name="student_chair" position={[x, 0, z + CHAIR_OFFSET_Z]} rotationY={Math.PI} scale={CHAIR_SCALE} />
+          {[-SEAT_OFFSET_X, SEAT_OFFSET_X].map((dx) => (
+            <Prop key={dx} name="student_chair" position={[x + dx, 0, z + CHAIR_OFFSET_Z]} rotationY={Math.PI} scale={CHAIR_SCALE} />
+          ))}
         </group>
       ))}
     </group>

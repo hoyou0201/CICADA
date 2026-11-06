@@ -18,12 +18,15 @@
 
 ## 강의실 소품
 
-| 파일 | 출처 | 라이선스 | 용도 |
-|---|---|---|---|
-| `student_desk`, `student_chair`, `world_map`, `teacher_desk`, `globe`, `open_book`, `pencil_cup`, `backpack`, `books_stack`, `paper_trash_bin`, `bench`, `cubby_shelf` | Low Poly School Pack (reodesuxz) — https://reodesuxz.itch.io/low-poly-school-pack | 상업 이용 가능, 재배포 금지, 표기 불필요 | 책상, 의자, 세계지도, 교탁과 책상 위 소품, 수납장, 벤치 |
-| `bookshelf_tall`, `locker_row` | Low Poly Library & School Pack (reodesuxz) — https://reodesuxz.itch.io/low-poly-library-school-pack | 같음 | 책장, 사물함 |
-| `lamp_standing`, `pictureframe_medium` | KayKit Furniture Bits 1.0 (Kay Lousberg) — https://github.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0 | CC0 1.0 | 램프, 액자 |
+한국 대학 강의실 분위기에 맞춰 Low Poly School Pack(reodesuxz)에서 아래만 쓴다. https://reodesuxz.itch.io/low-poly-school-pack — 상업 이용 가능, 재배포 금지, 표기 불필요.
 
-- School Pack 두 개도 재배포가 금지라서 이 저장소는 비공개로 유지해야 한다. 공개로 바꾸면 School Pack에서 온 `public/models/props/` 파일(위 표 첫 두 줄)을 모두 빼야 한다.
-- 바닥은 모델 없이 `Room.tsx`에서 canvas로 그린 마룻바닥 무늬를 쓴다.
-- 태극기, 급훈, 시간표(예시), 벽시계는 모델 없이 `KoreanDecor.tsx`에서 canvas로 그린다.
+| 파일 | 용도 |
+|---|---|
+| `student_desk`, `student_chair` | 2인용 긴 책상(책상을 가로로 늘림)과 의자 |
+| `teacher_desk` | 교탁 |
+| `open_book`, `backpack` | 책상 위 책, 바닥 책가방 |
+| `paper_trash_bin` | 휴지통 |
+| `projector` | 천장 빔프로젝터 |
+
+- 재배포 금지라서 저장소를 공개로 바꾸면 `public/models/props/`의 위 파일을 모두 빼야 한다.
+- 바닥(회색 카펫 타일), 벽시계, 강의실 이용 안내문은 모델 없이 `Room.tsx`, `LectureDecor.tsx`에서 canvas로 그린다.

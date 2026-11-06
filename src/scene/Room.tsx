@@ -2,16 +2,16 @@ import { useMemo } from 'react'
 import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from 'three'
 import { EXIT_DOOR, HALF_DEPTH, HALF_WIDTH, ROOM, type Vec3 } from './layout.ts'
 
-// 바닥은 canvas로 그린 마룻바닥 무늬를 한 장짜리 판에 반복해서 입힌다(2m 한 칸).
+// 바닥은 canvas로 그린 회색 카펫 타일 무늬를 한 장짜리 판에 반복해서 입힌다(2m 한 칸, 타일 0.5m).
 const FLOOR_TILE_M = 2
-const PLANK_COLORS = ['#e3d3b0', '#e9dabb', '#dccaa4', '#e0cfaa', '#eadcc0']
-const SEAM = '#b8a47c'
+const CARPET_COLORS = ['#9aa3ad', '#949da8', '#a1a9b3', '#97a0ab', '#9ea6b0']
+const CARPET_SEAM = '#838c97'
 const WALL = '#f1ece1'
 const TRIM = '#8a6a48'
 const GLASS = '#bfe0f2'
 const FRAME = '#e8e2d4'
-const WAINSCOT = '#7fa593'
-const WAINSCOT_H = 1.1
+const WAINSCOT = '#b08968' // 앞벽 목재 패널
+const WAINSCOT_H = 4
 
 const WINDOW_SIZE: [number, number] = [2.6, 1.6]
 const WINDOW_Y = 2.2
@@ -35,7 +35,7 @@ function Wall({ position, rotationY, size }: { position: Vec3; rotationY: number
   )
 }
 
-// 벽 아랫부분을 두르는 초록색 패널(안쪽으로 살짝 띄워 겹치는 깜빡임을 막는다).
+// 벽에 붙이는 목재 패널(안쪽으로 살짝 띄워 겹치는 깜빡임을 막는다).
 function Wainscot({ position, rotationY, width }: { position: Vec3; rotationY: number; width: number }) {
   return (
     <mesh position={[position[0], WAINSCOT_H / 2, position[2]]} rotation={[0, rotationY, 0]} receiveShadow>
@@ -108,24 +108,22 @@ function DoorFrame() {
 
 function makeFloorTexture() {
   const size = 512
-  const planks = 8
-  const w = size / planks
+  const tiles = 4
+  const w = size / tiles
   const canvas = document.createElement('canvas')
   canvas.width = canvas.height = size
   const ctx = canvas.getContext('2d')
   if (ctx) {
-    for (let i = 0; i < planks; i++) {
-      // 판자마다 길이 방향으로 한 번 끊어 이음매를 엇갈리게 한다.
-      const cut = ((i * 5) % 7) * (size / 7) + size / 14
-      const lengths: [number, number][] = [[0, cut], [cut, size]]
-      lengths.forEach(([y0, y1], j) => {
-        ctx.fillStyle = PLANK_COLORS[(i * 3 + j * 2) % PLANK_COLORS.length]
-        ctx.fillRect(i * w, y0, w, y1 - y0)
-        ctx.fillStyle = SEAM
-        ctx.fillRect(i * w, y0, w, 2)
-      })
-      ctx.fillStyle = SEAM
+    for (let r = 0; r < tiles; r++) {
+      for (let c = 0; c < tiles; c++) {
+        ctx.fillStyle = CARPET_COLORS[(r * 3 + c * 2) % CARPET_COLORS.length]
+        ctx.fillRect(c * w, r * w, w, w)
+      }
+    }
+    ctx.fillStyle = CARPET_SEAM
+    for (let i = 0; i < tiles; i++) {
       ctx.fillRect(i * w, 0, 2, size)
+      ctx.fillRect(0, i * w, size, 2)
     }
   }
   const texture = new CanvasTexture(canvas)
@@ -156,11 +154,8 @@ export default function Room() {
       <Wall position={[-HALF_WIDTH, height / 2, 0]} rotationY={Math.PI / 2} size={[depth, height]} />
       {/* 오른쪽(창, 게시판) */}
       <Wall position={[HALF_WIDTH, height / 2, 0]} rotationY={-Math.PI / 2} size={[depth, height]} />
-      {/* 아랫벽 패널 */}
+      {/* 앞벽 목재 패널(칠판 뒤) */}
       <Wainscot position={[0, 0, -HALF_DEPTH + 0.005]} rotationY={0} width={width} />
-      <Wainscot position={[0, 0, HALF_DEPTH - 0.005]} rotationY={Math.PI} width={width} />
-      <Wainscot position={[-HALF_WIDTH + 0.005, 0, 0]} rotationY={Math.PI / 2} width={depth} />
-      <Wainscot position={[HALF_WIDTH - 0.005, 0, 0]} rotationY={-Math.PI / 2} width={depth} />
       {/* 걸레받이 */}
       {[
         { p: [0, 0.06, -HALF_DEPTH + 0.01], r: 0, s: width },
