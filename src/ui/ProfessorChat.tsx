@@ -15,7 +15,8 @@ export default function ProfessorChat() {
   const lecture = useStore((s) => s.selectedLecture)
   const courses = useStore((s) => s.desk?.courses)
 
-  const [open, setOpen] = useState(true)
+  const open = useStore((s) => s.professorChatOpen)
+  const setOpen = useStore((s) => s.setProfessorChatOpen)
   const [question, setQuestion] = useState('')
   const [pending, setPending] = useState(false)
   const [failed, setFailed] = useState(false)
