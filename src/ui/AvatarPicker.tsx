@@ -101,12 +101,12 @@ export default function AvatarPicker() {
   }
 
   return (
-    <section style={{ position: 'absolute', top: '128px', left: 'var(--space-4)', zIndex: 2 }} aria-label="캐릭터 꾸미기">
+    <section aria-label="캐릭터 꾸미기">
       <button type="button" aria-expanded={open} aria-controls="avatar-picker" onClick={toggle}>
         캐릭터 꾸미기
       </button>
       {open && (
-        <div id="avatar-picker" className="panel" style={{ marginTop: 'var(--space-2)', width: 'min(280px, calc(100vw - 32px))', maxHeight: '60vh', overflowY: 'auto', display: 'grid', gap: 'var(--space-2)' }}>
+        <div id="avatar-picker" className="panel" style={{ marginTop: 'var(--space-2)', display: 'grid', gap: 'var(--space-2)' }}>
           <div role="img" aria-label="캐릭터 미리보기" style={{ height: 160 }}>
             <Canvas camera={{ position: [0, 0.9, 2.8], fov: 35 }} onCreated={({ camera }) => camera.lookAt(0, 0.75, 0)}>
               <ambientLight intensity={1.2} />
