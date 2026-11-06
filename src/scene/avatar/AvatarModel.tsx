@@ -76,7 +76,7 @@ export default function AvatarModel({ nickname, avatar, status, moving = false }
           </mesh>
         ))}
       </group>
-      <Html position={[0, labelY, 0]} center distanceFactor={8} style={{ pointerEvents: 'none' }}>
+      <Html position={[0, labelY, 0]} center distanceFactor={8} zIndexRange={[0, 0]} style={{ pointerEvents: 'none' }}>
         <div style={{ textAlign: 'center', whiteSpace: 'nowrap', fontSize: 14 }}>
           <div
             style={{

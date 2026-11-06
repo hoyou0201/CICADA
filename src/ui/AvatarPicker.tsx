@@ -24,7 +24,7 @@ export default function AvatarPicker() {
   }
 
   return (
-    <section style={{ position: 'absolute', bottom: 'var(--space-4)', left: 'var(--space-4)', zIndex: 2 }} aria-label="캐릭터 꾸미기">
+    <section style={{ position: 'absolute', top: '128px', left: 'var(--space-4)', zIndex: 2 }} aria-label="캐릭터 꾸미기">
       <button type="button" aria-expanded={open} aria-controls="avatar-picker" onClick={() => setOpen(!open)}>
         캐릭터 꾸미기
       </button>
