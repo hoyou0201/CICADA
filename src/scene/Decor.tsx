@@ -16,14 +16,13 @@ const ITEMS: Item[] = [
   { name: 'banner_patternA_blue', position: [5.4, 0.45, -HALF_DEPTH - 0.25], scale: 0.7 },
   { name: 'lamp_standing', position: [-HALF_WIDTH + 0.7, 0, -HALF_DEPTH + 0.7], scale: 0.75 },
   { name: 'lamp_standing', position: [HALF_WIDTH - 0.7, 0, -HALF_DEPTH + 0.7], scale: 0.75 },
-  // 캐비닛(창문 아래 높이로 낮게)
-  { name: 'cabinet_medium_decorated', position: [HALF_WIDTH - 0.4, 0, 6.5], rotationY: RIGHT, scale: 0.75 },
-  { name: 'cabinet_medium_decorated', position: [-HALF_WIDTH + 0.4, 0, 3.5], rotationY: LEFT, scale: 0.75 },
-  // 뒤쪽 벽 선반
-  { name: 'shelf_B_large_decorated', position: [-3.2, 1.6, HALF_DEPTH - 0.02], rotationY: Math.PI },
-  { name: 'shelf_B_large_decorated', position: [3.2, 1.6, HALF_DEPTH - 0.02], rotationY: Math.PI },
-  // 액자
-  { name: 'pictureframe_large_A', position: [-HALF_WIDTH + 0.03, 2.2, -3], rotationY: LEFT },
+  // 사물함(오른쪽 벽)과 책장(왼쪽 벽, 뒤쪽 벽)
+  { name: 'locker_row', position: [HALF_WIDTH - 0.3, 0, 6.5], rotationY: RIGHT },
+  { name: 'bookshelf_tall', position: [-HALF_WIDTH + 0.25, 0, 3.5], rotationY: LEFT },
+  { name: 'bookshelf_tall', position: [-3.2, 0, HALF_DEPTH - 0.25], rotationY: Math.PI },
+  { name: 'bookshelf_tall', position: [3.2, 0, HALF_DEPTH - 0.25], rotationY: Math.PI },
+  // 세계지도와 액자
+  { name: 'world_map', position: [-HALF_WIDTH + 0.03, 1.6, -3], rotationY: LEFT },
   { name: 'pictureframe_medium', position: [HALF_WIDTH - 0.03, 2.2, -2], rotationY: RIGHT },
 ]
 

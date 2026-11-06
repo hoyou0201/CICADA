@@ -9,7 +9,7 @@ const AWAY_OPACITY = 0.5
 const FADE = 0.2
 
 type Props = {
-  /** GLB 파일 주소(예: `/models/student-knight.glb`) */
+  /** GLB 파일 주소(예: `/models/student-schoolkid.glb`) */
   url: string
   /** 움직이는 중이면 `activeClip`(없으면 모델의 첫 애니메이션, 걷기)을 재생한다 */
   moving?: boolean
