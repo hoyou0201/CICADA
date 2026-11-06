@@ -28,7 +28,7 @@ function makeEmptyTexture() {
 // 앞쪽 벽의 칠판. 공유 화면 스트림이 없을 때는 안내 문구가 쓰여 있다.
 export default function Blackboard() {
   const [width, height] = BLACKBOARD.size
-  const emptyTexture = useMemo(makeEmptyTexture, [])
+  const emptyTexture = useMemo(() => makeEmptyTexture(), [])
   useEffect(() => () => emptyTexture.dispose(), [emptyTexture])
 
   return (
