@@ -2,6 +2,7 @@ import { Html } from '@react-three/drei'
 import type { AvatarLook, PresenceStatus } from '../../contract/room'
 import { DEFAULT_AVATAR_COLOR, getPreset } from './presets'
 import { useWalkAnim } from './useWalkAnim'
+import GlbAvatar from './GlbAvatar'
 import Hair from './Hair'
 
 export const WATCHING_LABEL = '수강 중'
@@ -23,14 +24,16 @@ export default function AvatarModel({ nickname, avatar, status, moving = false }
   const preset = getPreset(avatar.preset)
   const color = avatar.color || DEFAULT_AVATAR_COLOR
   const { body, head, eye } = preset
+  // 프리셋이 GLB를 가리키면(`model`) 그 모델을 그린다. 프리셋 타입에 `model?: string`이 생기면 이 단언을 없앤다.
+  const modelUrl = (preset as { model?: string }).model
 
   const bodyCenterY = body.radius + body.length / 2
   const headY = body.radius * 2 + body.length + head.radius * 0.6
   const labelY = headY + head.radius * 1.8 + 0.2
   const away = status === 'away'
 
-  return (
-    <group>
+  // 기본 도형 아바타. GLB를 쓰지 않거나, 불러오는 중이거나, 불러오기에 실패했을 때 그린다.
+  const shapes = (
       <group ref={bodyRef}>
         <mesh position={[0, bodyCenterY, 0]}>
           <capsuleGeometry args={[body.radius, body.length, 8, 16]} />
@@ -76,6 +79,11 @@ export default function AvatarModel({ nickname, avatar, status, moving = false }
           </mesh>
         ))}
       </group>
+  )
+
+  return (
+    <group>
+      {modelUrl ? <GlbAvatar url={modelUrl} moving={moving} away={away} fallback={shapes} /> : shapes}
       <Html position={[0, labelY, 0]} center distanceFactor={8} zIndexRange={[0, 0]} style={{ pointerEvents: 'none' }}>
         <div style={{ textAlign: 'center', whiteSpace: 'nowrap', fontSize: 14 }}>
           <div
