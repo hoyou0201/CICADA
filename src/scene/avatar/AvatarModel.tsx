@@ -1,6 +1,7 @@
 import { Html } from '@react-three/drei'
 import type { AvatarLook, PresenceStatus } from '../../contract/room'
 import { DEFAULT_AVATAR_COLOR, getPreset } from './presets'
+import { useWalkAnim } from './useWalkAnim'
 
 export const WATCHING_LABEL = '수강 중'
 
@@ -8,13 +9,16 @@ type Props = {
   nickname: string
   avatar: AvatarLook
   status: PresenceStatus
+  /** 움직이는 중이면 통통 튀고, 아니면 숨쉬듯 움직인다 */
+  moving?: boolean
 }
 
 const FACE_COLOR = '#2b2b3a'
 const AWAY_OPACITY = 0.5
 
 /** 원점이 발 아래인 캡슐·구 조합 아바타. 위치와 회전은 부모 group이 정한다. */
-export default function AvatarModel({ nickname, avatar, status }: Props) {
+export default function AvatarModel({ nickname, avatar, status, moving = false }: Props) {
+  const bodyRef = useWalkAnim(moving)
   const preset = getPreset(avatar.preset)
   const color = avatar.color || DEFAULT_AVATAR_COLOR
   const { body, head, eye } = preset
@@ -26,20 +30,22 @@ export default function AvatarModel({ nickname, avatar, status }: Props) {
 
   return (
     <group>
-      <mesh position={[0, bodyCenterY, 0]}>
-        <capsuleGeometry args={[body.radius, body.length, 8, 16]} />
-        <meshStandardMaterial color={color} transparent={away} opacity={away ? AWAY_OPACITY : 1} />
-      </mesh>
-      <mesh position={[0, headY, 0]}>
-        <sphereGeometry args={[head.radius, 24, 16]} />
-        <meshStandardMaterial color={color} transparent={away} opacity={away ? AWAY_OPACITY : 1} />
-      </mesh>
-      {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * eye.spacing, headY + 0.03, head.radius * 0.9]}>
-          <sphereGeometry args={[eye.radius, 12, 8]} />
-          <meshStandardMaterial color={FACE_COLOR} />
+      <group ref={bodyRef}>
+        <mesh position={[0, bodyCenterY, 0]}>
+          <capsuleGeometry args={[body.radius, body.length, 8, 16]} />
+          <meshStandardMaterial color={color} transparent={away} opacity={away ? AWAY_OPACITY : 1} />
         </mesh>
-      ))}
+        <mesh position={[0, headY, 0]}>
+          <sphereGeometry args={[head.radius, 24, 16]} />
+          <meshStandardMaterial color={color} transparent={away} opacity={away ? AWAY_OPACITY : 1} />
+        </mesh>
+        {[-1, 1].map((side) => (
+          <mesh key={side} position={[side * eye.spacing, headY + 0.03, head.radius * 0.9]}>
+            <sphereGeometry args={[eye.radius, 12, 8]} />
+            <meshStandardMaterial color={FACE_COLOR} />
+          </mesh>
+        ))}
+      </group>
       <Html position={[0, labelY, 0]} center distanceFactor={8} style={{ pointerEvents: 'none' }}>
         <div style={{ textAlign: 'center', whiteSpace: 'nowrap', fontSize: 14 }}>
           <div
