@@ -1,6 +1,4 @@
-// 아바타 프리셋. AvatarLook.preset 값이 id로 쓰인다. 모두 GLB 캐릭터(Chibi People Starter, Absurdox Lab)다.
-
-import { RAISE_HAND } from './GlbAvatar.tsx'
+// 아바타 프리셋. AvatarLook.preset 값이 id로 쓰인다. 모두 GLB 캐릭터(Plumberry Plains Vol.2, Chibipup)다.
 
 export type AvatarPreset = {
   id: string
@@ -17,14 +15,16 @@ export const DEFAULT_PRESET_ID = 'student-1'
 export const DEFAULT_AVATAR_COLOR = '#4f8cff'
 
 function preset(id: string, name: string, file: string): AvatarPreset {
-  return { id, name, model: `/models/${file}.glb`, idleClip: 'idle', walkClip: 'walk', handClip: RAISE_HAND }
+  return { id, name, model: `/models/${file}.glb`, idleClip: 'idle', walkClip: 'walk', handClip: 'wave' }
 }
 
 export const AVATAR_PRESETS: readonly AvatarPreset[] = [
-  preset('student-1', '여학생', 'student-woman'),
-  preset('student-2', '남학생', 'student-man'),
-  preset('student-3', '꼬마', 'student-kid'),
-  preset('student-4', '웨이터', 'student-waiter'),
+  preset('student-1', '토끼 키키', 'student-rabbit'),
+  preset('student-2', '여우 진니아', 'student-fox'),
+  preset('student-3', '햄스터 프레야', 'student-hamster'),
+  preset('student-4', '생쥐 포피', 'student-mouse'),
+  preset('student-5', '오리 어니', 'student-duck'),
+  preset('student-6', '펭귄 오슨', 'student-penguin'),
 ]
 
 /** 모르는 id(예전 도형 프리셋 포함)면 기본 프리셋을 준다. */

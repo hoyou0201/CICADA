@@ -1,5 +1,4 @@
 import { useAnimations, useGLTF } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
 import { Component, Suspense, useEffect, useMemo, useRef, type ReactNode } from 'react'
 import { AnimationMixer, Box3, Vector3, type AnimationAction, type Material, type Mesh, type SkinnedMesh } from 'three'
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js'
@@ -9,14 +8,8 @@ export const AVATAR_HEIGHT = 1.46
 const AWAY_OPACITY = 0.5
 const FADE = 0.2
 
-/** 모델에 손들기 클립이 없을 때 `overrideClip`에 쓰는 이름. 가만히 있는 동작을 재생하면서 오른팔(`arm-right` 노드)을 코드로 든다. */
-export const RAISE_HAND = 'raise-hand'
-const RAISE_ARM_NODE = 'arm-right'
-const RAISE_ANGLE = 2.9 // 팔이 아래(0)에서 거의 위(π)까지
-const RAISE_SPEED = 10
-
 type Props = {
-  /** GLB 파일 주소(예: `/models/student-woman.glb`) */
+  /** GLB 파일 주소(예: `/models/student-rabbit.glb`) */
   url: string
   /** 움직이는 중이면 `activeClip`(없으면 모델의 첫 애니메이션, 걷기)을 재생한다 */
   moving?: boolean
@@ -85,7 +78,7 @@ function GlbModel({ url, moving = false, away = false, idleClip, activeClip, ove
 
   const current = useRef<AnimationAction | undefined>(undefined)
   useEffect(() => {
-    const name = overrideClip === RAISE_HAND ? idleClip : (overrideClip ?? (moving ? (activeClip ?? names[0]) : idleClip))
+    const name = overrideClip ?? (moving ? (activeClip ?? names[0]) : idleClip)
     const next = name ? actions[name] ?? undefined : undefined
     const previous = current.current
     if (previous && previous !== next) previous.fadeOut(FADE)
@@ -93,17 +86,6 @@ function GlbModel({ url, moving = false, away = false, idleClip, activeClip, ove
     if (next && (next !== previous || !next.isRunning())) next.reset().fadeIn(FADE).play()
     current.current = next
   }, [actions, names, moving, idleClip, activeClip, overrideClip])
-
-  // 손들기: 애니메이션이 팔을 덮어쓴 다음에 팔을 들어 올리고 살짝 흔든다.
-  const raise = useRef(0)
-  useFrame(({ clock }, delta) => {
-    const arm = root.getObjectByName(RAISE_ARM_NODE)
-    if (!arm) return
-    const target = overrideClip === RAISE_HAND ? 1 : 0
-    raise.current += (target - raise.current) * Math.min(1, delta * RAISE_SPEED)
-    if (raise.current < 0.01) return
-    arm.rotation.z = raise.current * (RAISE_ANGLE + Math.sin(clock.elapsedTime * 9) * 0.12)
-  })
 
   useEffect(() => {
     root.traverse((object) => {

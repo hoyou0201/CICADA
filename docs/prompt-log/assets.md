@@ -4,16 +4,17 @@
 
 | 파일 | 용도 | 출처 | 프롬프트 | 라이선스 | 비고 |
 |---|---|---|---|---|---|
-| `public/models/professor-elder.glb` | 교수님 | Chibi People Starter `person-elder-a` (Absurdox Lab) — https://olha-m.itch.io/chibi-people-starter | 해당 없음(무료 에셋) | 상업 이용 가능, 재배포 금지, 표기 불필요 | 원본 그대로 |
-| `public/models/student-woman.glb` | 학생 1 | 같은 팩 `person-guest-a` | 해당 없음 | 같음 | 원본 그대로 |
-| `public/models/student-man.glb` | 학생 2 | 같은 팩 `person-guest-b` | 해당 없음 | 같음 | 원본 그대로 |
-| `public/models/student-kid.glb` | 학생 3 | 같은 팩 `person-kid-a` | 해당 없음 | 같음 | 원본 그대로 |
-| `public/models/student-waiter.glb` | 학생 4 | 같은 팩 `person-waiter-a` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/professor-bear.glb` | 교수님 | Plumberry Plains Vol.2 `bruno-the-bear` (Chibipup) — https://chibipup.itch.io/plumberry-plains-vol-2-even-more-free-animal-friends-for-your-village | 해당 없음(무료 에셋) | 상업 이용 가능, 재배포 금지, AI 학습 금지, 표기 불필요 | 원본 그대로 |
+| `public/models/student-rabbit.glb` | 학생 1 | 같은 팩 `kiki-the-rabbit` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/student-fox.glb` | 학생 2 | 같은 팩 `zinnia-the-fox` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/student-hamster.glb` | 학생 3 | 같은 팩 `freya-the-hamster` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/student-mouse.glb` | 학생 4 | 같은 팩 `poppy-the-mouse` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/student-duck.glb` | 학생 5 | 같은 팩 `ernie-the-duck` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/student-penguin.glb` | 학생 6 | 같은 팩 `orson-the-penguin` | 해당 없음 | 같음 | 원본 그대로 |
 
-- 스키닝 없이 몸 부위 노드를 돌리는 방식의 애니메이션이다(`idle`, `walk`, `sit`, `holding-both`, `emote-yes`, `emote-no`).
-- 손들기 클립이 없어서 `GlbAvatar`가 오른팔(`arm-right`) 노드를 코드로 들어 올린다(`RAISE_HAND`). 교수님 말하기는 `emote-yes`(끄덕임)를 쓴다.
-- 팩 라이선스 문서에 "AI 도움으로 절차적으로 생성한 뒤 사람이 선별했다"고 적혀 있다.
-- 재배포 금지라서 저장소를 공개로 바꾸면 위 GLB 5개도 빼야 한다.
+- 클립 26개가 모델에 들어 있고 스키닝 없이 노드를 돌리는 방식이다. 쓰는 클립은 `idle`, `walk`, 손들기 `wave`, 교수님 말하기 `talk`다.
+- itch.io 페이지에 "AI Assisted" 태그가 붙어 있다(어느 부분인지는 밝히지 않음). 대회 규정의 AI 에셋 허용 여부를 확인해야 한다.
+- 재배포 금지라서 저장소를 공개로 바꾸면 위 GLB 7개도 빼야 한다.
 
 ## 강의실 소품
 
