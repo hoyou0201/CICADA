@@ -99,6 +99,17 @@ describe('store', () => {
     expect(get().remotePlayers).toEqual({})
   })
 
+  it('교수님 대화 창을 열고 닫으며 초기화한다', () => {
+    expect(get().professorChatOpen).toBe(false)
+    get().setProfessorChatOpen(true)
+    expect(get().professorChatOpen).toBe(true)
+    get().setProfessorChatOpen(false)
+    expect(get().professorChatOpen).toBe(false)
+    get().setProfessorChatOpen(true)
+    resetStore()
+    expect(get().professorChatOpen).toBe(false)
+  })
+
   it('연결 상태와 교수님 대화 기록', () => {
     get().setConnection('offline')
     expect(get().connection).toBe('offline')
