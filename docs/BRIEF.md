@@ -73,8 +73,8 @@
 | 설치 / 실행 / 포트 | `npm install` / `npm run dev` / 5173 |
 | lint / 테스트 / 빌드 명령 | `npm run lint` / `npm test`(Vitest, 계약·변환 함수만) / `npm run build` |
 | 배포 서비스·URL | Vercel(정적 사이트 + 서버 함수 `api/professor.ts`, `api/notices.ts`). URL 미정 |
-| 데이터 저장·외부 API·비밀값 위치 | 데이터베이스 없음. LMS는 브라우저에서 lms.inu.ac.kr Moodle 웹 서비스(`/login/token.php`, `/webservice/rest/server.php`, CORS `*` 확인)로 직접 호출. 같은 방은 Supabase Realtime(presence + broadcast), 프로젝트는 미정(팀이 만든다). AI 교수님은 서버 함수에서 LLM API 호출(제공사 미정). 학교 공지는 서버 함수가 인천대 홈페이지 RSS(`https://www.inu.ac.kr/bbs/inu/{게시판번호}/rssList.do?row=N`, CORS 없음)를 읽어 JSON으로 준다. 비밀값은 Vercel 환경 변수 |
-| 환경 변수 이름 (값은 `.env.example`에 쓰지 않는다) | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`. LLM 키 이름은 제공사가 정해지면 추가 |
+| 데이터 저장·외부 API·비밀값 위치 | 데이터베이스 없음. LMS는 브라우저에서 lms.inu.ac.kr Moodle 웹 서비스(`/login/token.php`, `/webservice/rest/server.php`, CORS `*` 확인)로 직접 호출. 같은 방은 Supabase Realtime(presence + broadcast), 프로젝트는 미정(팀이 만든다). AI 교수님은 서버 함수에서 Claude API 호출(`@anthropic-ai/sdk`, 모델 `claude-haiku-5-5`). 학교 공지는 서버 함수가 인천대 홈페이지 RSS(`https://www.inu.ac.kr/bbs/inu/{게시판번호}/rssList.do?row=N`, CORS 없음)를 읽어 JSON으로 준다. 비밀값은 Vercel 환경 변수 |
+| 환경 변수 이름 (값은 `.env.example`에 쓰지 않는다) | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `ANTHROPIC_API_KEY`(서버 함수 전용) |
 | 프롬프트 로그 | 평가 항목이므로 처음부터 남긴다. 각 에이전트의 대화 기록 파일(Claude Code의 프로젝트별 `*.jsonl`, Codex의 `~/.codex/sessions`)을 마지막에 모아 비밀값을 가린 뒤 `docs/prompt-log/`에 넣고, 대표 프롬프트를 골라 이유를 적은 `docs/prompt-log/README.md`를 만든다. 학번·비밀번호·토큰은 에이전트 대화에 절대 입력하지 않는다 |
 
 ## 데이터·화면 계약
@@ -115,4 +115,4 @@
 
 `contest-split`이 이슈를 만든 뒤 번호만 적는다. 예: `T1 #1`, `T2 #2`. 상태·담당은 적지 않는다.
 
-미정
+T1 #22, T2 #23, T3 #24, T4 #25, T5 #26, D1 #27, D2 #28, T6 #29, T7 #30, T8 #31, T9 #32, T10 #33, T11 #34, T12 #35, T13 #36, T30 #37, T14 #38, T15 #39, T16 #40, T17 #41, T24 #42, T29 #43, T18 #44, T19 #45, T20 #46, T21 #47, T22 #48, T23 #49, T26 #50, T25 #51, T27 #52, T28 #53, H1 #54, T31 #55, T32 #56, T33 #57, T34 #58, T35 #59, T36 #60, T37 #61, T38 #62, H2 #63, H3 #64, T39 #65, T41 #66, T40 #67, T42 #68, T43 #69, T44 #70, T45 #71, T46 #72, T47 #73, T48 #74, T49 #75, T50 #76, T51 #77, T52 #78, T53 #79, T54 #80, H4 #81, T55 #82, T56 #83, T57 #84, T58 #85, T59 #86, T60 #87, T61 #88, T62 #89, T63 #90, T64 #91, T65 #92, T66 #93, T67 #94, H5 #95, T68 #96, T69 #97, T70 #98, T71 #99, T72 #100, H6 #101, T73 #102, H7 #103
