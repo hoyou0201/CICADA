@@ -239,6 +239,7 @@ function HallwayPlayer() {
           avatar={avatar}
           status={watching ? 'watching' : 'idle'}
           moving={moving}
+          isSelf
         />
       </group>
       <FollowCamera />
