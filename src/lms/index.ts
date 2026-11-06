@@ -1,17 +1,11 @@
 import { LmsError, type DeskData, type LmsClient, type LmsSession } from '../contract/lms.ts'
+import { realLmsClient } from './client.ts'
 import { emptySampleLmsClient, sampleLmsClient } from './sample.ts'
 import { clearSession, loadSession, saveSession, type SessionMode } from './session.ts'
 
-// 실제 LMS 클라이언트(T19)가 생기기 전까지는 연결 실패로 돌려서 "샘플로 둘러보기"로 안내한다.
-// 실제 구현이 생기면 setRealLmsClient로 끼운다.
-let realClient: LmsClient = {
-  async login() {
-    throw new LmsError('network')
-  },
-  async getDesk() {
-    throw new LmsError('network')
-  },
-}
+// 기본은 실제 LMS 클라이언트(src/lms/client.ts). 로그인·책상 데이터가 브라우저에서 LMS로 직접 간다.
+// setRealLmsClient는 테스트에서 다른 구현으로 바꿔 끼울 때 쓴다.
+let realClient: LmsClient = realLmsClient
 
 export function setRealLmsClient(client: LmsClient) {
   realClient = client
