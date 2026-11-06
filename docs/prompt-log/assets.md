@@ -4,14 +4,16 @@
 
 | 파일 | 용도 | 출처 | 프롬프트 | 라이선스 | 비고 |
 |---|---|---|---|---|---|
-| `public/models/professor-office-lady.glb` | 교수님 | Gobkit Free Character Pack Vol.1 `OfficeLady` — https://gobkit.itch.io/gobkit-free-character-pack-vol-1 | 해당 없음(무료 에셋) | CC0 1.0 | 원본 그대로 |
-| `public/models/student-schoolkid.glb` | 학생 1 | 같은 팩 `Schoolkid` | 해당 없음 | CC0 1.0 | 원본 그대로 |
-| `public/models/student-courier.glb` | 학생 2 | 같은 팩 `FoodCourier` | 해당 없음 | CC0 1.0 | 원본 그대로 |
-| `public/models/student-cashier.glb` | 학생 3 | 같은 팩 `Cashier` | 해당 없음 | CC0 1.0 | 원본 그대로 |
-| `public/models/student-clerk.glb` | 학생 4 | 같은 팩 `StockClerk` | 해당 없음 | CC0 1.0 | 원본 그대로 |
+| `public/models/professor-elder.glb` | 교수님 | Chibi People Starter `person-elder-a` (Absurdox Lab) — https://olha-m.itch.io/chibi-people-starter | 해당 없음(무료 에셋) | 상업 이용 가능, 재배포 금지, 표기 불필요 | 원본 그대로 |
+| `public/models/student-woman.glb` | 학생 1 | 같은 팩 `person-guest-a` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/student-man.glb` | 학생 2 | 같은 팩 `person-guest-b` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/student-kid.glb` | 학생 3 | 같은 팩 `person-kid-a` | 해당 없음 | 같음 | 원본 그대로 |
+| `public/models/student-waiter.glb` | 학생 4 | 같은 팩 `person-waiter-a` | 해당 없음 | 같음 | 원본 그대로 |
 
-- 애니메이션은 모델에 들어 있다(`Idle`, `Walk`, 손들기·교수님 말하기 `Special`). 캐릭터마다 Special 동작이 다르다(손 흔들기, 점프, 환호).
-- Kinemiq 무료 애니메이션 팩은 스켈레톤이 달라서(66본 vs 13본) 쓰지 않았다.
+- 스키닝 없이 몸 부위 노드를 돌리는 방식의 애니메이션이다(`idle`, `walk`, `sit`, `holding-both`, `emote-yes`, `emote-no`).
+- 손들기 클립이 없어서 `GlbAvatar`가 오른팔(`arm-right`) 노드를 코드로 들어 올린다(`RAISE_HAND`). 교수님 말하기는 `emote-yes`(끄덕임)를 쓴다.
+- 팩 라이선스 문서에 "AI 도움으로 절차적으로 생성한 뒤 사람이 선별했다"고 적혀 있다.
+- 재배포 금지라서 저장소를 공개로 바꾸면 위 GLB 5개도 빼야 한다.
 
 ## 강의실 소품
 
@@ -22,5 +24,5 @@
 | `lamp_standing`, `pictureframe_medium` | KayKit Furniture Bits 1.0 (Kay Lousberg) — https://github.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0 | CC0 1.0 | 램프, 액자 |
 | `banner_patternA_blue` | KayKit Dungeon Remastered 1.0 — https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0 | CC0 1.0 | 현수막 |
 
-- School Pack 두 개는 재배포가 금지라서 이 저장소는 비공개로 유지해야 한다. 공개로 바꾸면 School Pack에서 온 `public/models/props/` 파일(위 표 첫 두 줄)을 모두 빼야 한다.
+- School Pack 두 개도 재배포가 금지라서 이 저장소는 비공개로 유지해야 한다. 공개로 바꾸면 School Pack에서 온 `public/models/props/` 파일(위 표 첫 두 줄)을 모두 빼야 한다.
 - 바닥은 모델 없이 `Room.tsx`에서 canvas로 그린 마룻바닥 무늬를 쓴다.
