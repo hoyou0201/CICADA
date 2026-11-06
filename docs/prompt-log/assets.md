@@ -19,7 +19,8 @@
 |---|---|---|---|
 | `student_desk`, `student_chair`, `world_map`, `teacher_desk`, `globe`, `open_book`, `pencil_cup`, `backpack`, `books_stack`, `paper_trash_bin`, `bench`, `cubby_shelf`, `wall_clock`, `flagpole` | Low Poly School Pack (reodesuxz) — https://reodesuxz.itch.io/low-poly-school-pack | 상업 이용 가능, 재배포 금지, 표기 불필요 | 책상, 의자, 세계지도, 교탁과 책상 위 소품, 수납장, 벤치, 시계, 깃대 |
 | `bookshelf_tall`, `locker_row` | Low Poly Library & School Pack (reodesuxz) — https://reodesuxz.itch.io/low-poly-library-school-pack | 같음 | 책장, 사물함 |
-| `lamp_standing`, `rug_rectangle_A`, `pictureframe_medium` | KayKit Furniture Bits 1.0 (Kay Lousberg) — https://github.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0 | CC0 1.0 | 램프, 러그, 액자 |
-| `floor_wood_large`, `floor_wood_large_dark`, `banner_patternA_blue` | KayKit Dungeon Remastered 1.0 — https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0 | CC0 1.0 | 나무 바닥 타일, 현수막 |
+| `lamp_standing`, `pictureframe_medium` | KayKit Furniture Bits 1.0 (Kay Lousberg) — https://github.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0 | CC0 1.0 | 램프, 액자 |
+| `banner_patternA_blue` | KayKit Dungeon Remastered 1.0 — https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0 | CC0 1.0 | 현수막 |
 
 - School Pack 두 개는 재배포가 금지라서 이 저장소는 비공개로 유지해야 한다. 공개로 바꾸면 School Pack에서 온 `public/models/props/` 파일(위 표 첫 두 줄)을 모두 빼야 한다.
+- 바닥은 모델 없이 `Room.tsx`에서 canvas로 그린 마룻바닥 무늬를 쓴다.

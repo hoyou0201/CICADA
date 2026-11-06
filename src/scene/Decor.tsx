@@ -9,15 +9,13 @@ const LEFT = Math.PI / 2
 type Item = { name: string; position: Vec3; rotationY?: number; scale?: number | Vec3 }
 
 const ITEMS: Item[] = [
-  // 칠판 앞 러그
-  { name: 'rug_rectangle_A', position: [0, 0.005, -6.4], scale: [1.7, 0.25, 1.1] },
   // 칠판 양옆 현수막과 램프
   { name: 'banner_patternA_blue', position: [-5.4, 0.45, -HALF_DEPTH - 0.25], scale: 0.7 },
   { name: 'banner_patternA_blue', position: [5.4, 0.45, -HALF_DEPTH - 0.25], scale: 0.7 },
   { name: 'lamp_standing', position: [-HALF_WIDTH + 0.7, 0, -HALF_DEPTH + 0.7], scale: 0.75 },
   { name: 'lamp_standing', position: [HALF_WIDTH - 0.7, 0, -HALF_DEPTH + 0.7], scale: 0.75 },
-  // 사물함(오른쪽 벽)과 책장(왼쪽 벽, 뒤쪽 벽)
-  { name: 'locker_row', position: [HALF_WIDTH - 0.3, 0, 6.5], rotationY: RIGHT },
+  // 사물함과 책장(창문과 겹치지 않는 벽에)
+  { name: 'locker_row', position: [0, 0, HALF_DEPTH - 0.25], rotationY: Math.PI },
   { name: 'bookshelf_tall', position: [-HALF_WIDTH + 0.25, 0, 3.5], rotationY: LEFT },
   { name: 'bookshelf_tall', position: [-3.2, 0, HALF_DEPTH - 0.25], rotationY: Math.PI },
   { name: 'bookshelf_tall', position: [3.2, 0, HALF_DEPTH - 0.25], rotationY: Math.PI },
@@ -30,10 +28,10 @@ const ITEMS: Item[] = [
   { name: 'cubby_shelf', position: [HALF_WIDTH - 0.3, 0, -6], rotationY: RIGHT, scale: 1.2 },
   { name: 'bench', position: [-HALF_WIDTH + 0.3, 0, -1], rotationY: LEFT, scale: 1.2 },
   { name: 'paper_trash_bin', position: [-HALF_WIDTH + 0.4, 0, 5.4] },
-  { name: 'wall_clock', position: [0, 3, HALF_DEPTH - 0.05], rotationY: Math.PI },
+  { name: 'wall_clock', position: [0, 3.2, HALF_DEPTH - 0.05], rotationY: Math.PI },
   { name: 'flagpole', position: [HALF_WIDTH - 0.8, 0, HALF_DEPTH - 0.8], scale: 0.9 },
   // 세계지도와 액자
-  { name: 'world_map', position: [-HALF_WIDTH + 0.03, 1.6, -3], rotationY: LEFT },
+  { name: 'world_map', position: [-HALF_WIDTH + 0.03, 1.9, -3], rotationY: LEFT, scale: 0.8 },
   { name: 'pictureframe_medium', position: [HALF_WIDTH - 0.03, 2.2, -2], rotationY: RIGHT },
 ]
 
