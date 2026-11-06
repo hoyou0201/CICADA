@@ -51,9 +51,10 @@ export const PROFESSOR = {
 } as const
 
 export const NOTICE_BOARD = {
-  position: [HALF_WIDTH - 0.05, 1.8, 2] as Vec3,
-  rotationY: -Math.PI / 2,
-  size: [3, 2] as [width: number, height: number],
+  // 카메라가 뒤(+z)에서 앞을 보므로, 비스듬한 옆벽 대신 정면 벽(칠판 오른쪽)에 건다.
+  position: [5.6, 2.4, -HALF_DEPTH + 0.05] as Vec3,
+  rotationY: 0,
+  size: [2.4, 1.6] as [width: number, height: number],
 } as const
 
 export const ROOM_SIGN = {

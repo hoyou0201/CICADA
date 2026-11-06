@@ -16,7 +16,7 @@ const WINDOW_SIZE: [number, number] = [2.6, 1.6]
 const WINDOW_Y = 2.2
 const FRAME_T = 0.08
 
-// 창문이 놓일 벽과 z 위치. 오른쪽(+x) 벽은 햇살이 들어오는 쪽이라 게시판 자리(z 0.5~3.5)를 피한다.
+// 창문이 놓일 벽과 z 위치. 오른쪽(+x) 벽은 햇살이 들어오는 쪽이다.
 const WINDOWS: { x: number; z: number; rotationY: number }[] = [
   { x: HALF_WIDTH, z: -6, rotationY: -Math.PI / 2 },
   { x: HALF_WIDTH, z: 6, rotationY: -Math.PI / 2 },
@@ -124,7 +124,7 @@ export default function Room() {
       <Wall position={[0, height / 2, HALF_DEPTH]} rotationY={Math.PI} size={[width, height]} />
       {/* 왼쪽(출입문) */}
       <Wall position={[-HALF_WIDTH, height / 2, 0]} rotationY={Math.PI / 2} size={[depth, height]} />
-      {/* 오른쪽(창, 게시판) */}
+      {/* 오른쪽(창) */}
       <Wall position={[HALF_WIDTH, height / 2, 0]} rotationY={-Math.PI / 2} size={[depth, height]} />
       {/* 걸레받이 */}
       {[
