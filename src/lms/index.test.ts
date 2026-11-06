@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { LmsError, type LmsClient } from '../contract/lms.ts'
 import { lms, setRealLmsClient } from './index.ts'
 import { loadSession } from './session.ts'
@@ -80,5 +80,63 @@ describe('lms 진입점', () => {
   it('깨진 저장값은 지우고 null', async () => {
     sessionStorage.setItem('cicada.lms.session', '{oops')
     expect(await lms.restore()).toBeNull()
+  })
+})
+
+// setRealLmsClient로 바꾸지 않은 기본값이 실제 LMS 클라이언트인지 확인한다.
+// 모듈을 새로 불러와 기본 상태에서 시작하고, fetch만 목으로 바꾼다(실제 계정·네트워크는 쓰지 않는다).
+describe('기본 실제 클라이언트', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.resetModules()
+  })
+
+  const json = (body: unknown) => new Response(JSON.stringify(body), { status: 200 })
+
+  async function freshLms(fetchMock: ReturnType<typeof vi.fn>) {
+    vi.resetModules()
+    vi.stubGlobal('fetch', fetchMock)
+    return (await import('./index.ts')).lms
+  }
+
+  it('login은 기본으로 lms.inu.ac.kr에 로그인하고 실제 세션을 저장한다', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(json({ token: 'tok123' }))
+      .mockResolvedValueOnce(json({ fullname: '김학생', userid: 4242 }))
+    const fresh = await freshLms(fetchMock)
+
+    const session = await fresh.login('2020001', 'secret')
+
+    expect(session).toEqual({ token: 'tok123', userId: 4242, fullName: '김학생', isSample: false })
+    expect(fetchMock.mock.calls[0][0]).toBe('https://lms.inu.ac.kr/login/token.php')
+    expect(String(fetchMock.mock.calls[0][0])).not.toContain('secret')
+    expect(loadSession()?.mode).toBe('real')
+  })
+
+  it('getDesk도 기본으로 실제 LMS에서 받는다(연결 실패로 돌리지 않는다)', async () => {
+    const fetchMock = vi.fn(async (_url: string, init: RequestInit) => {
+      const wsfunction = (init.body as URLSearchParams).get('wsfunction')
+      return json(wsfunction === 'core_calendar_get_action_events_by_timesort' ? { events: [] } : [])
+    })
+    const fresh = await freshLms(fetchMock as unknown as ReturnType<typeof vi.fn>)
+
+    const desk = await fresh.getDesk({ token: 'tok', userId: 7, fullName: '김학생', isSample: false })
+
+    expect(desk).toMatchObject({ isSample: false, partial: false, courses: [], lectures: [], deadlines: [] })
+    const called = fetchMock.mock.calls.map(([, init]) => (init.body as URLSearchParams).get('wsfunction'))
+    expect(called).toContain('core_enrol_get_users_courses')
+  })
+
+  it('샘플로 둘러보기는 네트워크를 쓰지 않는다', async () => {
+    const fetchMock = vi.fn()
+    const fresh = await freshLms(fetchMock)
+
+    const session = await fresh.sample()
+    const desk = await fresh.getDesk(session)
+
+    expect(session.isSample).toBe(true)
+    expect(desk.isSample).toBe(true)
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })
