@@ -1,0 +1,23 @@
+{
+  "246": [
+    { "title": "[샘플] 2학기 수강 정정 기간 안내", "url": "https://example.com/sample/246/1", "publishedAt": "2026-11-05T09:00:00+09:00" },
+    { "title": "[샘플] 학사 일정 변경 안내", "url": "https://example.com/sample/246/2", "publishedAt": "2026-11-04T10:30:00+09:00" },
+    { "title": "[샘플] 중간고사 성적 열람 안내", "url": "https://example.com/sample/246/3", "publishedAt": "2026-11-03T14:00:00+09:00" },
+    { "title": "[샘플] 휴학·복학 신청 안내", "url": "https://example.com/sample/246/4", "publishedAt": "2026-11-02T11:00:00+09:00" },
+    { "title": "[샘플] 도서관 이용 시간 변경", "url": "https://example.com/sample/246/5", "publishedAt": "2026-11-01T09:30:00+09:00" }
+  ],
+  "247": [
+    { "title": "[샘플] 장학금 신청 접수 안내", "url": "https://example.com/sample/247/1", "publishedAt": "2026-11-05T13:00:00+09:00" },
+    { "title": "[샘플] 교내 근로학생 모집", "url": "https://example.com/sample/247/2", "publishedAt": "2026-11-04T09:00:00+09:00" },
+    { "title": "[샘플] 기숙사 입사 신청 안내", "url": "https://example.com/sample/247/3", "publishedAt": "2026-11-03T16:00:00+09:00" },
+    { "title": "[샘플] 학생 건강검진 일정", "url": "https://example.com/sample/247/4", "publishedAt": "2026-11-02T10:00:00+09:00" },
+    { "title": "[샘플] 교환학생 설명회", "url": "https://example.com/sample/247/5", "publishedAt": "2026-11-01T15:00:00+09:00" }
+  ],
+  "249": [
+    { "title": "[샘플] 해커톤 참가자 모집", "url": "https://example.com/sample/249/1", "publishedAt": "2026-11-05T17:00:00+09:00" },
+    { "title": "[샘플] 취업 특강 개최 안내", "url": "https://example.com/sample/249/2", "publishedAt": "2026-11-04T12:00:00+09:00" },
+    { "title": "[샘플] 동아리 박람회 안내", "url": "https://example.com/sample/249/3", "publishedAt": "2026-11-03T09:30:00+09:00" },
+    { "title": "[샘플] 공모전 정보 모음", "url": "https://example.com/sample/249/4", "publishedAt": "2026-11-02T14:30:00+09:00" },
+    { "title": "[샘플] 캠퍼스 시설 점검 안내", "url": "https://example.com/sample/249/5", "publishedAt": "2026-11-01T08:30:00+09:00" }
+  ]
+}
