@@ -9,9 +9,7 @@ const LEFT = Math.PI / 2
 type Item = { name: string; position: Vec3; rotationY?: number; scale?: number | Vec3 }
 
 const ITEMS: Item[] = [
-  // 칠판 양옆 현수막과 램프
-  { name: 'banner_patternA_blue', position: [-5.4, 0.45, -HALF_DEPTH - 0.25], scale: 0.7 },
-  { name: 'banner_patternA_blue', position: [5.4, 0.45, -HALF_DEPTH - 0.25], scale: 0.7 },
+  // 칠판 양옆 램프(태극기, 급훈, 시간표는 KoreanDecor가 그린다)
   { name: 'lamp_standing', position: [-HALF_WIDTH + 0.7, 0, -HALF_DEPTH + 0.7], scale: 0.75 },
   { name: 'lamp_standing', position: [HALF_WIDTH - 0.7, 0, -HALF_DEPTH + 0.7], scale: 0.75 },
   // 사물함과 책장(창문과 겹치지 않는 벽에)
@@ -24,12 +22,10 @@ const ITEMS: Item[] = [
   { name: 'globe', position: [2.5, 0.84, -7.4], scale: 0.6 },
   { name: 'books_stack', position: [3.7, 0.84, -7.4], rotationY: 0.4 },
   { name: 'pencil_cup', position: [3.2, 0.84, -7.6] },
-  // 창문 아래 수납장과 벤치, 문 옆 휴지통, 뒤쪽 시계, 모서리 깃대
+  // 창문 아래 수납장과 벤치, 문 옆 휴지통
   { name: 'cubby_shelf', position: [HALF_WIDTH - 0.3, 0, -6], rotationY: RIGHT, scale: 1.2 },
   { name: 'bench', position: [-HALF_WIDTH + 0.3, 0, -1], rotationY: LEFT, scale: 1.2 },
   { name: 'paper_trash_bin', position: [-HALF_WIDTH + 0.4, 0, 5.4] },
-  { name: 'wall_clock', position: [0, 3.2, HALF_DEPTH - 0.05], rotationY: Math.PI },
-  { name: 'flagpole', position: [HALF_WIDTH - 0.8, 0, HALF_DEPTH - 0.8], scale: 0.9 },
   // 세계지도와 액자
   { name: 'world_map', position: [-HALF_WIDTH + 0.03, 1.9, -3], rotationY: LEFT, scale: 0.8 },
   { name: 'pictureframe_medium', position: [HALF_WIDTH - 0.03, 2.2, -2], rotationY: RIGHT },

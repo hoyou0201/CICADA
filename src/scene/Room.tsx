@@ -4,8 +4,8 @@ import { EXIT_DOOR, HALF_DEPTH, HALF_WIDTH, ROOM, type Vec3 } from './layout.ts'
 
 // 바닥은 canvas로 그린 마룻바닥 무늬를 한 장짜리 판에 반복해서 입힌다(2m 한 칸).
 const FLOOR_TILE_M = 2
-const PLANK_COLORS = ['#c9a672', '#d2b07c', '#c19c68', '#cdaa76', '#d6b583']
-const SEAM = '#8f7048'
+const PLANK_COLORS = ['#e3d3b0', '#e9dabb', '#dccaa4', '#e0cfaa', '#eadcc0']
+const SEAM = '#b8a47c'
 const WALL = '#f1ece1'
 const TRIM = '#8a6a48'
 const GLASS = '#bfe0f2'
