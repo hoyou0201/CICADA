@@ -6,10 +6,10 @@ import { useStore } from '../state/store.ts'
 const PANEL_STYLE: CSSProperties = {
   position: 'absolute',
   left: 'var(--space-4)',
-  top: 188,
+  top: 304,
   width: 340,
   maxWidth: 'calc(100% - 32px)',
-  maxHeight: 'calc(100vh - 320px)',
+  maxHeight: 'calc(100vh - 430px)',
   overflowY: 'auto',
   zIndex: 3,
 }
