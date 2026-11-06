@@ -1,20 +1,20 @@
-/* 전역 스타일. 변수 값은 임시이며 이름은 그대로 쓴다. */
+/* 전역 스타일. 변수 이름은 바꾸지 않는다. */
 :root {
-  /* 색 */
-  --color-bg: #10131a;
-  --color-surface: #1b2030;
-  --color-surface-2: #252b3d;
-  --color-border: #343b52;
-  --color-text: #eef1f7;
-  --color-text-muted: #9aa3b8;
-  --color-primary: #4f8cff;
+  /* 색: 밝고 차분한 캠퍼스 톤 */
+  --color-bg: #f4f6f2;
+  --color-surface: #ffffff;
+  --color-surface-2: #e9eee7;
+  --color-border: #cdd6ca;
+  --color-text: #1d2b24;
+  --color-text-muted: #55655c;
+  --color-primary: #1f6f54;
   --color-primary-text: #ffffff;
-  --color-accent: #ffc94d;
-  --color-success: #3ccf8e;
-  --color-warning: #ffb347;
-  --color-danger: #ff5c6c;
-  --color-sample: #b18cff;
-  --color-overlay: rgb(16 19 26 / 0.72);
+  --color-accent: #e0a526;
+  --color-success: #1a7f4b;
+  --color-warning: #9a5b00;
+  --color-danger: #c0392b;
+  --color-sample: #6b4fc4;
+  --color-overlay: rgb(29 43 36 / 0.45);
 
   /* 글꼴 */
   --font-sans: 'Pretendard', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
@@ -40,11 +40,11 @@
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
-  --shadow-panel: 0 8px 24px rgb(0 0 0 / 0.35);
+  --shadow-panel: 0 8px 24px rgb(29 43 36 / 0.16);
   --z-overlay: 10;
   --z-modal: 20;
 
-  color-scheme: dark;
+  color-scheme: light;
   font-family: var(--font-sans);
   font-size: var(--font-size-md);
   line-height: var(--line-height);
@@ -65,19 +65,106 @@ body,
   margin: 0;
 }
 
-button {
+button,
+.btn {
   font: inherit;
+  font-weight: var(--font-weight-bold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
-  border: none;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: var(--color-primary-text);
   cursor: pointer;
+  transition: filter 0.15s;
 }
 
-button:disabled {
+button:hover:not(:disabled),
+.btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+button:disabled,
+.btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
+input,
+textarea,
+select,
+.input {
+  font: inherit;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.panel {
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-panel);
+}
+
+.panel-title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.5;
+}
+
+.badge-success { background: #d7efe1; color: #14633b; }
+.badge-warning { background: #fbe9c8; color: #7a4700; }
+.badge-danger { background: #f8dcd8; color: #9c2b20; }
+.badge-sample { background: #e6e0f7; color: #4e378f; }
+
+.text-muted {
+  color: var(--color-text-muted);
 }
 
 .screen {
