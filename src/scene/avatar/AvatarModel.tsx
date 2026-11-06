@@ -17,12 +17,14 @@ type Props = {
   isSelf?: boolean
   /** 다른 사람 아바타면 그 사람의 presence key. 받은 리액션으로 끄덕·손들기·Zzz를 보여 준다 */
   reactionKey?: string
+  /** true면 머리 위 닉네임·상태 표시를 그리지 않는다(캐릭터 미리보기용) */
+  hideLabel?: boolean
 }
 
 const LABEL_GAP = 0.35
 
 /** 원점이 발 아래인 GLB 캐릭터 아바타. 위치와 회전은 부모 group이 정한다. */
-export default function AvatarModel({ nickname, avatar, status, moving = false, isSelf = false, reactionKey }: Props) {
+export default function AvatarModel({ nickname, avatar, status, moving = false, isSelf = false, reactionKey, hideLabel = false }: Props) {
   const selfKey = useReactions((state) => state.selfKey)
   const preset = getPreset(avatar.preset)
   const away = status === 'away'
@@ -41,34 +43,36 @@ export default function AvatarModel({ nickname, avatar, status, moving = false, 
           />
         )}
       </Reaction>
-      <Html position={[0, AVATAR_HEIGHT + LABEL_GAP, 0]} center distanceFactor={8} zIndexRange={[0, 0]} style={{ pointerEvents: 'none' }}>
-        <div style={{ textAlign: 'center', whiteSpace: 'nowrap', fontSize: 14 }}>
-          <div
-            style={{
-              background: 'rgba(0,0,0,0.6)',
-              color: '#fff',
-              padding: '2px 8px',
-              borderRadius: 8,
-            }}
-          >
-            {nickname}
-          </div>
-          {status === 'watching' && (
+      {!hideLabel && (
+        <Html position={[0, AVATAR_HEIGHT + LABEL_GAP, 0]} center distanceFactor={8} zIndexRange={[0, 0]} style={{ pointerEvents: 'none' }}>
+          <div style={{ textAlign: 'center', whiteSpace: 'nowrap', fontSize: 14 }}>
             <div
               style={{
-                marginTop: 2,
-                background: '#2f9e44',
+                background: 'rgba(0,0,0,0.6)',
                 color: '#fff',
-                padding: '1px 6px',
+                padding: '2px 8px',
                 borderRadius: 8,
-                fontSize: 12,
               }}
             >
-              {WATCHING_LABEL}
+              {nickname}
             </div>
-          )}
-        </div>
-      </Html>
+            {status === 'watching' && (
+              <div
+                style={{
+                  marginTop: 2,
+                  background: '#2f9e44',
+                  color: '#fff',
+                  padding: '1px 6px',
+                  borderRadius: 8,
+                  fontSize: 12,
+                }}
+              >
+                {WATCHING_LABEL}
+              </div>
+            )}
+          </div>
+        </Html>
+      )}
     </group>
   )
 }

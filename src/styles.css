@@ -342,6 +342,13 @@ select:focus-visible,
   filter: brightness(1.1);
 }
 
+.sidebar-window .btn-danger,
+.sidebar-window .btn-danger:hover:not(:disabled) {
+  border-color: var(--color-danger);
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
 /* 헤더의 접기 버튼은 배경 없이 조용하게. */
 .sidebar-header button {
   border-color: transparent;

@@ -87,7 +87,7 @@ export default function AvatarPicker() {
             <Canvas camera={{ position: [0, 0.9, 2.8], fov: 35 }} onCreated={({ camera }) => camera.lookAt(0, 0.75, 0)}>
               <ambientLight intensity={1.2} />
               <directionalLight position={[2, 3, 3]} intensity={1.5} />
-              <AvatarModel nickname="미리보기" avatar={draft} status="idle" />
+              <AvatarModel nickname="" avatar={draft} status="idle" hideLabel />
             </Canvas>
           </div>
           <label>

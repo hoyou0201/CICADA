@@ -22,9 +22,11 @@ export default function ScreenShareButton() {
 
   if (status === 'sharing') {
     return (
-      <button type="button" className="btn btn-danger" onClick={stop}>
-        공유 중지
-      </button>
+      <div>
+        <button type="button" className="btn btn-danger" onClick={stop}>
+          공유 중지
+        </button>
+      </div>
     )
   }
 
