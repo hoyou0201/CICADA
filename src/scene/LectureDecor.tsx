@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { CanvasTexture, SRGBColorSpace } from 'three'
 import { HALF_DEPTH, type Vec3 } from './layout.ts'
 
-// 한국 대학 강의실 분위기를 내는 앞쪽 벽 장식: 벽시계, 강의실 이용 안내, 빔프로젝터 고정 막대. 글과 그림은 canvas로 그려 텍스처로 쓴다.
+// 한국 대학 강의실 분위기를 내는 앞쪽 벽 장식(칠판 왼쪽; 오른쪽은 학교 공지 게시판 자리): 벽시계, 강의실 이용 안내, 빔프로젝터 고정 막대. 글과 그림은 canvas로 그려 텍스처로 쓴다.
 const FONT = "'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif"
 const FRAME_COLOR = '#7a5a3a'
 const FRAME_T = 0.05
@@ -115,7 +115,7 @@ export default function LectureDecor() {
   return (
     <group>
       <WallCanvas position={[-5.4, 3, WALL_Z]} size={[0.6, 0.6]} px={CLOCK_PX} draw={drawClock} />
-      <WallCanvas position={[5.4, 2.7, WALL_Z]} size={[1.3, 1.02]} px={NOTICE_PX} draw={drawNotice} />
+      <WallCanvas position={[-5.4, 1.85, WALL_Z]} size={[1.3, 1.02]} px={NOTICE_PX} draw={drawNotice} />
       <ProjectorRod />
     </group>
   )
