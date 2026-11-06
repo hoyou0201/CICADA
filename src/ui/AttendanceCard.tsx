@@ -41,15 +41,10 @@ type AttendanceCopy = {
 }
 
 const ROOT_STYLE: CSSProperties = {
-  position: 'absolute',
-  left: 'var(--space-4)',
-  bottom: 'var(--space-4)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   gap: 'var(--space-2)',
-  width: 280,
-  maxWidth: 'calc(100% - var(--space-5))',
 }
 
 const CARD_STYLE: CSSProperties = {

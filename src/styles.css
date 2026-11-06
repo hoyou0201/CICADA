@@ -197,3 +197,162 @@ select:focus-visible,
 .overlay > * {
   pointer-events: auto;
 }
+
+/* 캔버스 위 패널을 모두 담는 창 하나. 섹션은 옅은 구분선으로만 나누고, 위젯은 각자 좌표를 갖지 않는다. */
+.sidebar {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 340px;
+  max-width: calc(100% - var(--space-5));
+  pointer-events: none;
+}
+
+.sidebar-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  border-color: rgb(205 214 202 / 0.7);
+  border-radius: var(--radius-lg);
+  background: rgb(255 255 255 / 0.94);
+  backdrop-filter: blur(10px);
+  font-size: var(--font-size-sm);
+  pointer-events: auto;
+}
+
+.sidebar-window[data-open='false'] {
+  width: auto;
+}
+
+.sidebar-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+}
+
+.sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.sidebar-title::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.sidebar-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.sidebar-body[hidden] {
+  display: none;
+}
+
+/* 섹션: 한 줄씩 쌓고 옅은 구분선만 둔다. */
+.sidebar-body > * {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-surface-2);
+}
+
+.sidebar-body > :empty {
+  display: none;
+}
+
+/* 위젯이 자기 창처럼 그리던 테두리·그림자·배경을 없앤다. */
+.sidebar-window .sidebar-body .panel {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sidebar-window .sidebar-body > .panel {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-surface-2);
+}
+
+/* 섹션 제목은 작고 단정하게. */
+.sidebar-window .panel-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.sidebar-window label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.sidebar-window .text-muted {
+  font-size: var(--font-size-xs);
+}
+
+/* 버튼은 작고 크기를 맞춘다. 기본은 윤곽선, .btn은 채운 버튼. */
+.sidebar-window button {
+  padding: 6px var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.sidebar-window button:hover:not(:disabled) {
+  background: var(--color-surface-2);
+  filter: none;
+}
+
+.sidebar-window .btn:not(.btn-secondary) {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+}
+
+.sidebar-window .btn:not(.btn-secondary):hover:not(:disabled) {
+  background: var(--color-primary);
+  filter: brightness(1.1);
+}
+
+/* 헤더의 접기 버튼은 배경 없이 조용하게. */
+.sidebar-header button {
+  border-color: transparent;
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.sidebar-window select,
+.sidebar-window input,
+.sidebar-window textarea {
+  padding: 6px var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}

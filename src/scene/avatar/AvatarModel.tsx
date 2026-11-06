@@ -1,4 +1,4 @@
-import { Html } from '@react-three/drei'
+import Html from '../SafeHtml'
 import type { AvatarLook, PresenceStatus } from '../../contract/room'
 import { useReactions } from '../../room/reactions'
 import { getPreset } from './presets'

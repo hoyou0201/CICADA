@@ -13,6 +13,7 @@ import ReactionBar from '../ui/ReactionBar.tsx'
 import RoomSwitcher from '../ui/RoomSwitcher.tsx'
 import ScreenShareButton from '../ui/ScreenShareButton.tsx'
 import ShareGuide from '../ui/ShareGuide.tsx'
+import Sidebar from '../ui/Sidebar.tsx'
 import SoundToggle from '../ui/SoundToggle.tsx'
 import WebGLGate from '../ui/WebGLGate.tsx'
 
@@ -27,21 +28,21 @@ export default function ClassroomScreen({ navigate }: Props) {
         </Suspense>
       </WebGLGate>
       <div className="overlay">
-        <Hud />
-        <LecturePanel />
-        {/* HUD·캐릭터·소리 패널은 왼쪽 위에 겹쳐 있다. 공유 버튼은 그 아래에 둬야 눌린다. */}
-        <div style={{ position: 'absolute', top: 320, left: 'var(--space-4)', zIndex: 2 }}>
+        {/* 패널은 사이드바 한 곳에 세로로 쌓는다. 좌표를 따로 주면 열릴 때 겹친다. */}
+        <Sidebar>
+          <RoomSwitcher navigate={navigate} />
+          <Hud />
+          <NoticePanel />
+          <LecturePanel />
+          <ProfessorChat />
+          <AvatarPicker />
           <ScreenShareButton />
-        </div>
+          <SoundToggle />
+          <AttendanceCard />
+          <InviteQr />
+        </Sidebar>
         <ShareGuide />
-        <SoundToggle />
-        <ProfessorChat />
-        <AvatarPicker />
-        <RoomSwitcher navigate={navigate} />
-        <NoticePanel />
         <ReactionBar />
-        <AttendanceCard />
-        <InviteQr />
       </div>
     </div>
   )

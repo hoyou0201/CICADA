@@ -91,6 +91,7 @@ export default function Player() {
           avatar={avatar}
           status={watching ? 'watching' : 'idle'}
           moving={moving}
+          isSelf
         />
       </group>
       <FollowCamera />

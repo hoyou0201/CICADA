@@ -4,14 +4,7 @@ import { NOTICE_BOARDS, NOTICES_EMPTY_MESSAGE, NOTICES_ERROR_MESSAGE } from '../
 import { useStore } from '../state/store.ts'
 
 const PANEL_STYLE: CSSProperties = {
-  position: 'absolute',
-  left: 'var(--space-4)',
-  top: 304,
-  width: 340,
-  maxWidth: 'calc(100% - 32px)',
-  maxHeight: 'calc(100vh - 430px)',
-  overflowY: 'auto',
-  zIndex: 3,
+  width: '100%',
 }
 
 type TabResult = { board: number; data: NoticesResult | null; failed: boolean }
