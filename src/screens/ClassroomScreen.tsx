@@ -21,7 +21,7 @@ export default function ClassroomScreen({ navigate }: Props) {
     <div className="screen classroom-screen">
       <WebGLGate>
         <Suspense fallback={<Loading />}>
-          <Classroom />
+          <Classroom navigate={navigate} />
         </Suspense>
       </WebGLGate>
       <div className="overlay">
