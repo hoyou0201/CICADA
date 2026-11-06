@@ -60,12 +60,31 @@ export function startConnection(
     })
   }
 
+  let pageHidden = false
+  const onPageHide = () => {
+    pageHidden = true
+    if (current) void current.channel.untrack().catch(() => {})
+  }
+  const onPageShow = () => {
+    if (!pageHidden) return
+    pageHidden = false
+    track()
+  }
+  if (typeof window !== 'undefined') {
+    window.addEventListener('pagehide', onPageHide)
+    window.addEventListener('pageshow', onPageShow)
+  }
+
   open()
   return {
     track,
     stop: () => {
       closed = true
       clearTimeout(timer)
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('pagehide', onPageHide)
+        window.removeEventListener('pageshow', onPageShow)
+      }
       if (current) void current.channel.untrack().catch(() => {})
       dispose()
       useStore.getState().setRemotePlayers([])
