@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import type { Navigate } from '../App.tsx'
 import Blackboard from './Blackboard.tsx'
+import Decor from './Decor.tsx'
 import Desks from './Desks.tsx'
 import ExitDoor from './ExitDoor.tsx'
 import Lighting from './Lighting.tsx'
@@ -20,6 +21,7 @@ export default function Classroom({ navigate }: Props) {
       <Lighting />
       <Room />
       <Desks />
+      <Decor />
       <Blackboard />
       <Professor />
       <NoticeBoard />

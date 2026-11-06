@@ -4,6 +4,7 @@ import type { NoticesResult } from '../api/notices.ts'
 import type { DeskData, LectureItem, LmsSession } from '../contract/lms.ts'
 import type { ProfessorTurn } from '../contract/professor.ts'
 import type { AvatarLook, MovePayload, PresenceState } from '../contract/room.ts'
+import { DEFAULT_AVATAR_COLOR, DEFAULT_PRESET_ID } from '../scene/avatar/presets.ts'
 import { DEFAULT_ROOM_ID } from '../rooms.ts'
 
 export type Position = { x: number; z: number }
@@ -13,7 +14,7 @@ export type ConnectionState = 'connecting' | 'online' | 'offline'
 /** 같은 방 다른 사람. 위치는 받은 move를 보간해 쓴다. */
 export type RemotePlayer = PresenceState & { position: Position | null; rotY: number }
 
-export const DEFAULT_AVATAR: AvatarLook = { preset: 'default', color: '#4f8cff' }
+export const DEFAULT_AVATAR: AvatarLook = { preset: DEFAULT_PRESET_ID, color: DEFAULT_AVATAR_COLOR }
 
 export type AppState = {
   screen: ScreenName
