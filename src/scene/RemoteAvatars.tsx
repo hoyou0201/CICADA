@@ -44,7 +44,7 @@ function RemoteAvatar({ player }: { player: RemotePlayer }) {
 
   return (
     <group ref={group} position={initialPosition}>
-      <AvatarModel nickname={player.nickname} avatar={player.avatar} status={player.status} moving={moving} />
+      <AvatarModel nickname={player.nickname} avatar={player.avatar} status={player.status} moving={moving} reactionKey={player.key} />
     </group>
   )
 }

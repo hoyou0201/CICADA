@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { startMoveReceiver } from './room/moveReceiver.ts'
 import { startMoveSender } from './room/moveSender.ts'
 import { joinPresence } from './room/presence.ts'
+import { startReactions } from './room/reactions.ts'
 import { anonymousNumber, loadNickname, resolveNickname } from './ui/nickname.ts'
 import CampusScreen from './screens/CampusScreen.tsx'
 import ClassroomScreen from './screens/ClassroomScreen.tsx'
@@ -31,7 +32,9 @@ export default function App() {
     if (screen !== 'classroom' || !presenceKey.current) return
     const stopSender = startMoveSender(presenceKey.current)
     const stopReceiver = startMoveReceiver(presenceKey.current)
+    const stopReactions = startReactions(presenceKey.current)
     return () => {
+      stopReactions()
       stopReceiver()
       stopSender()
     }

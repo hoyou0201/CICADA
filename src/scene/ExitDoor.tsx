@@ -1,4 +1,4 @@
-import { Html } from '@react-three/drei'
+import Html from './SafeHtml.tsx'
 import type { ThreeEvent } from '@react-three/fiber'
 import { useEffect } from 'react'
 import type { Navigate } from '../App.tsx'
