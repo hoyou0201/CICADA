@@ -1,5 +1,6 @@
 import Html from '../SafeHtml'
 import type { AvatarLook, PresenceStatus } from '../../contract/room'
+import { useChat } from '../../room/chat'
 import { useReactions } from '../../room/reactions'
 import { getPreset } from './presets'
 import GlbAvatar, { AVATAR_HEIGHT } from './GlbAvatar'
@@ -24,6 +25,9 @@ const LABEL_GAP = 0.35
 /** 원점이 발 아래인 GLB 캐릭터 아바타. 위치와 회전은 부모 group이 정한다. */
 export default function AvatarModel({ nickname, avatar, status, moving = false, isSelf = false, reactionKey }: Props) {
   const selfKey = useReactions((state) => state.selfKey)
+  const chatSelfKey = useChat((state) => state.selfKey)
+  const bubbleKey = isSelf ? chatSelfKey : reactionKey
+  const bubble = useChat((state) => (bubbleKey === undefined ? undefined : state.bubbles[bubbleKey]))
   const preset = getPreset(avatar.preset)
   const away = status === 'away'
 
@@ -69,6 +73,27 @@ export default function AvatarModel({ nickname, avatar, status, moving = false, 
           )}
         </div>
       </Html>
+      {bubble && (
+        <Html position={[0, AVATAR_HEIGHT + LABEL_GAP + 0.45, 0]} center distanceFactor={8} zIndexRange={[0, 0]} style={{ pointerEvents: 'none' }}>
+          <div
+            style={{
+              width: 'max-content',
+              maxWidth: 220,
+              padding: '6px 10px',
+              borderRadius: 12,
+              background: '#fff',
+              color: '#222',
+              fontSize: 14,
+              lineHeight: 1.35,
+              textAlign: 'center',
+              wordBreak: 'break-word',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+            }}
+          >
+            {bubble.text}
+          </div>
+        </Html>
+      )}
     </group>
   )
 }
