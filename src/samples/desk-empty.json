@@ -1,0 +1,9 @@
+{
+  "user": { "fullName": "샘플 학생" },
+  "courses": [],
+  "lectures": [],
+  "deadlines": [],
+  "fetchedAt": "2026-11-06T00:00:00.000Z",
+  "isSample": true,
+  "partial": false
+}
