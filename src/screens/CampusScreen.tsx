@@ -344,12 +344,12 @@ export default function CampusScreen({ navigate }: Props) {
       <div className="overlay">
         {/* 강의실 화면과 같이 패널을 사이드바 한 곳에 세로로 쌓는다. 따로 좌표를 주면 서로 겹친다. */}
         <Sidebar>
-          <button type="button" className="btn" onClick={() => handleNavigate('rooms')}>
-            강의실 목록
-          </button>
           <Hud />
           <AvatarPicker />
           <InviteQr />
+          <button type="button" className="btn" onClick={() => handleNavigate('rooms')}>
+            강의실 목록
+          </button>
         </Sidebar>
         <ReactionBar />
       </div>
