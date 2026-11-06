@@ -25,6 +25,7 @@ describe('샘플 클라이언트', () => {
 
   it('getNotices는 게시판 3개 모두 5개씩 샘플을 돌려준다', async () => {
     vi.useFakeTimers()
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('', { status: 404 })))
     for (const { board } of NOTICE_BOARDS) {
       const promise = getNotices(board, 5)
       await vi.advanceTimersByTimeAsync(500)
@@ -40,6 +41,7 @@ describe('샘플 클라이언트', () => {
 
   it('모르는 게시판은 빈 목록이다', async () => {
     vi.useFakeTimers()
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('', { status: 404 })))
     const promise = getNotices(1)
     await vi.advanceTimersByTimeAsync(500)
     expect((await promise).items).toEqual([])
@@ -81,6 +83,48 @@ describe('교수님 서버 클라이언트', () => {
     const result = askProfessor(request)
     const rejection = expect(result).rejects.toThrow()
     await vi.advanceTimersByTimeAsync(15_000)
+    await rejection
+  })
+})
+
+describe('공지 서버 클라이언트', () => {
+  it('요청 게시판의 서버 결과와 빈 목록을 그대로 반환한다', async () => {
+    const data = { board: 247, items: [], fetchedAt: '2026-11-06T00:00:00Z' }
+    const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify(data), {
+      headers: { 'content-type': 'application/json' },
+    }))
+    vi.stubGlobal('fetch', fetcher)
+    expect(await getNotices(247, 3)).toEqual({ ...data, isSample: false })
+    expect(fetcher).toHaveBeenCalledWith('/api/notices?board=247&row=3', expect.any(Object))
+  })
+
+  it('개발 서버가 HTML을 반환하면 샘플로 표시한다', async () => {
+    vi.useFakeTimers()
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('<html></html>', {
+      headers: { 'content-type': 'text/html' },
+    })))
+    const result = getNotices(246, 2)
+    await vi.advanceTimersByTimeAsync(500)
+    const notices = await result
+    expect(notices.isSample).toBe(true)
+    expect(notices.items).toHaveLength(2)
+  })
+
+  it('서버 오류와 잘못된 응답은 샘플로 숨기지 않는다', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('', { status: 502 })))
+    await expect(getNotices()).rejects.toThrow()
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ board: 246, items: 'invalid' }), {
+      headers: { 'content-type': 'application/json' },
+    })))
+    await expect(getNotices()).rejects.toThrow()
+  })
+
+  it('8초가 지나면 서버 응답을 기다리지 않는다', async () => {
+    vi.useFakeTimers()
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => new Promise(() => {})))
+    const result = getNotices()
+    const rejection = expect(result).rejects.toThrow()
+    await vi.advanceTimersByTimeAsync(8_000)
     await rejection
   })
 })

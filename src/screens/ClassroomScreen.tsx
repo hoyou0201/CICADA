@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Navigate } from '../App.tsx'
 import Classroom from '../scene/Classroom.tsx'
+import AttendanceCard from '../ui/AttendanceCard.tsx'
 import AvatarPicker from '../ui/AvatarPicker.tsx'
 import Hud from '../ui/Hud.tsx'
 import InviteQr from '../ui/InviteQr.tsx'
@@ -34,6 +35,7 @@ export default function ClassroomScreen({ navigate }: Props) {
         <RoomSwitcher navigate={navigate} />
         <NoticePanel />
         <ReactionBar />
+        <AttendanceCard />
         <InviteQr />
       </div>
     </div>
