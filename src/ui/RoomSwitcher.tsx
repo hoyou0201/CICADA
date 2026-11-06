@@ -12,6 +12,7 @@ const STYLE: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: 'var(--space-2)',
+  whiteSpace: 'nowrap',
 }
 
 export default function RoomSwitcher({ navigate }: Props) {
