@@ -1,10 +1,6 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense } from 'react'
 import type { Navigate } from '../App.tsx'
 import Classroom from '../scene/Classroom.tsx'
-import { joinPresence } from '../room/presence.ts'
-import { useStore } from '../state/store.ts'
-import { anonymousNumber, loadNickname, resolveNickname } from '../ui/nickname.ts'
-import { statusForLecture } from '../ui/openLecture.ts'
 import AvatarPicker from '../ui/AvatarPicker.tsx'
 import Hud from '../ui/Hud.tsx'
 import InviteQr from '../ui/InviteQr.tsx'
@@ -21,22 +17,6 @@ import WebGLGate from '../ui/WebGLGate.tsx'
 type Props = { navigate: Navigate }
 
 export default function ClassroomScreen({ navigate }: Props) {
-  useEffect(() => {
-    const presence = joinPresence({
-      nickname: resolveNickname(loadNickname(), anonymousNumber()),
-      status: statusForLecture(useStore.getState().selectedLecture),
-    })
-    const unsubscribe = useStore.subscribe((state, previous) => {
-      if (state.selectedLecture !== previous.selectedLecture) {
-        presence.update({ status: statusForLecture(state.selectedLecture) })
-      }
-    })
-    return () => {
-      unsubscribe()
-      presence.leave()
-    }
-  }, [])
-
   return (
     <div className="screen classroom-screen">
       <WebGLGate>

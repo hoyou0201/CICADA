@@ -1,11 +1,10 @@
-import type { RealtimeChannel } from '@supabase/supabase-js'
 import {
-  CAMPUS_CHANNEL,
   type AvatarLook,
   type PresenceState,
   type PresenceStatus,
 } from '../contract/room.ts'
 import { useStore } from '../state/store.ts'
+import { startConnection } from './connection.ts'
 import { createRealtimeClient } from './supabase.ts'
 
 /**
@@ -78,106 +77,48 @@ let active: PresenceHandle | null = null
 export function joinPresence(init: PresenceInit): PresenceHandle {
   active?.leave()
 
-  const { setConnection, setRemotePlayers } = useStore.getState()
   const key = crypto.randomUUID()
-
-  const client = createRealtimeClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY,
-  )
-  if (!client) {
-    setConnection('offline')
-    setRemotePlayers([])
-    const solo: PresenceHandle = {
-      key,
-      update: () => {},
-      leave: () => {
-        if (active === solo) active = null
-      },
-    }
-    active = solo
-    return solo
-  }
-
   let nickname = init.nickname
   let status: PresenceStatus = init.status ?? 'idle'
-  let closed = false
-  setConnection('connecting')
-
-  const channel: RealtimeChannel = client.channel(CAMPUS_CHANNEL, {
-    config: { presence: { key } },
-  })
 
   const mine = (): PresenceState => {
     const { roomId, avatar } = useStore.getState()
     return { key, nickname, roomId, avatar, status }
   }
 
-  const track = () => {
-    if (closed) return
-    channel.track(mine()).catch(() => {})
-  }
-
+  let lastPresence: Record<string, unknown[]> = {}
   const refreshRemote = () => {
-    const { roomId } = useStore.getState()
-    useStore
-      .getState()
-      .setRemotePlayers(collectRemotePlayers(channel.presenceState(), key, roomId))
+    const { roomId, setRemotePlayers } = useStore.getState()
+    setRemotePlayers(collectRemotePlayers(lastPresence, key, roomId))
   }
+  const connection = startConnection(
+    () => createRealtimeClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY),
+    key,
+    mine,
+    (state) => {
+      lastPresence = state
+      refreshRemote()
+    },
+  )
 
-  channel.on('presence', { event: 'sync' }, refreshRemote)
-
-  channel.subscribe((subscribeStatus) => {
-    if (closed) return
-    if (subscribeStatus === 'SUBSCRIBED') {
-      // 끊겼다 다시 붙을 때도 SUBSCRIBED가 오므로 그때마다 내 상태를 다시 올린다.
-      setConnection('online')
-      track()
-    } else if (
-      subscribeStatus === 'CHANNEL_ERROR' ||
-      subscribeStatus === 'TIMED_OUT' ||
-      subscribeStatus === 'CLOSED'
-    ) {
-      setConnection('offline')
-    }
-  })
-
-  // 방을 옮기거나 캐릭터를 바꾸면 다시 올리고, 방이 바뀌면 목록도 다시 거른다.
   const unsubscribeStore = useStore.subscribe((state, prev) => {
-    if (state.roomId !== prev.roomId || state.avatar !== prev.avatar) track()
-    if (state.roomId !== prev.roomId) refreshRemote()
+    if (state.roomId !== prev.roomId || state.avatar !== prev.avatar) connection.track()
+    if (state.roomId !== prev.roomId && state.connection === 'online') refreshRemote()
   })
-
-  // 탭을 닫을 때 바로 빠지도록 한다.
-  let pageHidden = false
-  const onPageHide = () => {
-    pageHidden = true
-    channel.untrack().catch(() => {})
-  }
-  const onPageShow = () => {
-    if (!pageHidden) return
-    pageHidden = false
-    track()
-  }
-  window.addEventListener('pagehide', onPageHide)
-  window.addEventListener('pageshow', onPageShow)
+  let closed = false
 
   const handle: PresenceHandle = {
     key,
     update: (patch) => {
       if (patch.nickname !== undefined) nickname = patch.nickname
       if (patch.status !== undefined) status = patch.status
-      track()
+      connection.track()
     },
     leave: () => {
       if (closed) return
       closed = true
       unsubscribeStore()
-      window.removeEventListener('pagehide', onPageHide)
-      window.removeEventListener('pageshow', onPageShow)
-      channel.untrack().catch(() => {})
-      client.removeChannel(channel).catch(() => {}).finally(() => client.realtime.disconnect())
-      useStore.getState().setRemotePlayers([])
+      connection.stop()
       if (active === handle) active = null
     },
   }
