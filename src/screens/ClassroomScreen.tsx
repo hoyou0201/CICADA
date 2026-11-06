@@ -3,6 +3,7 @@ import type { Navigate } from '../App.tsx'
 import Classroom from '../scene/Classroom.tsx'
 import AttendanceCard from '../ui/AttendanceCard.tsx'
 import AvatarPicker from '../ui/AvatarPicker.tsx'
+import ChatPanel from '../ui/ChatPanel.tsx'
 import Hud from '../ui/Hud.tsx'
 import InviteQr from '../ui/InviteQr.tsx'
 import LecturePanel from '../ui/LecturePanel.tsx'
@@ -43,6 +44,7 @@ export default function ClassroomScreen({ navigate }: Props) {
         </Sidebar>
         <ShareGuide />
         <ReactionBar />
+        <ChatPanel />
       </div>
     </div>
   )

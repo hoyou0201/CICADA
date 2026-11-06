@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { startChat } from './room/chat.ts'
 import { startMoveReceiver } from './room/moveReceiver.ts'
 import { startMoveSender } from './room/moveSender.ts'
 import { joinPresence } from './room/presence.ts'
@@ -33,7 +34,9 @@ export default function App() {
     const stopSender = startMoveSender(presenceKey.current)
     const stopReceiver = startMoveReceiver(presenceKey.current)
     const stopReactions = startReactions(presenceKey.current)
+    const stopChat = startChat(presenceKey.current, resolveNickname(loadNickname(), anonymousNumber()))
     return () => {
+      stopChat()
       stopReactions()
       stopReceiver()
       stopSender()
