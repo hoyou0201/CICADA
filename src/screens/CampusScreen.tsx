@@ -6,7 +6,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type ReactNode,
 } from 'react'
 import type { Group } from 'three'
@@ -37,6 +36,7 @@ import { useStore, type Position } from '../state/store.ts'
 import AvatarPicker from '../ui/AvatarPicker.tsx'
 import Hud from '../ui/Hud.tsx'
 import InviteQr from '../ui/InviteQr.tsx'
+import Sidebar from '../ui/Sidebar.tsx'
 import Loading from '../ui/Loading.tsx'
 import ReactionBar from '../ui/ReactionBar.tsx'
 import { anonymousNumber, loadNickname, resolveNickname } from '../ui/nickname.ts'
@@ -69,15 +69,6 @@ const KEY_DIRECTIONS: Record<string, Position> = {
   ArrowLeft: { x: -1, z: 0 },
   KeyD: { x: 1, z: 0 },
   ArrowRight: { x: 1, z: 0 },
-}
-
-const TOP_RIGHT_STYLE: CSSProperties = {
-  position: 'absolute',
-  top: 'var(--space-4)',
-  right: 'var(--space-4)',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 'var(--space-2)',
 }
 
 function clampToHallwayBounds(p: Position): Position {
@@ -350,15 +341,16 @@ export default function CampusScreen({ navigate }: Props) {
         </Suspense>
       </SceneErrorBoundary>
       <div className="overlay">
-        <Hud />
-        <AvatarPicker />
-        <div className="panel" style={TOP_RIGHT_STYLE}>
+        {/* 강의실 화면과 같이 패널을 사이드바 한 곳에 세로로 쌓는다. 따로 좌표를 주면 서로 겹친다. */}
+        <Sidebar>
           <button type="button" className="btn" onClick={() => handleNavigate('rooms')}>
             강의실 목록
           </button>
-        </div>
+          <Hud />
+          <AvatarPicker />
+          <InviteQr />
+        </Sidebar>
         <ReactionBar />
-        <InviteQr />
       </div>
     </div>
   )
