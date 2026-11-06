@@ -65,7 +65,7 @@ function Instances({ part, desks }: { part: Part; desks: Vec3[] }) {
 }
 
 export default function Desks() {
-  const desks = useMemo(deskPositions, [])
+  const desks = useMemo(() => deskPositions(), [])
   return (
     <group>
       {PARTS.map((part, i) => (
