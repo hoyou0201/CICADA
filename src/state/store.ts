@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { ScreenName } from '../App.tsx'
+import type { NoticesResult } from '../api/notices.ts'
 import type { DeskData, LectureItem, LmsSession } from '../contract/lms.ts'
 import type { ProfessorTurn } from '../contract/professor.ts'
 import type { AvatarLook, MovePayload, PresenceState } from '../contract/room.ts'
@@ -30,6 +31,9 @@ export type AppState = {
   /** 같은 방 사람들(key로 구분, 나 제외) */
   remotePlayers: Record<string, RemotePlayer>
   connection: ConnectionState
+  noticeOpen: boolean
+  notices: NoticesResult | null
+  noticeError: boolean
   professorChatOpen: boolean
   professorHistory: ProfessorTurn[]
   selectedLecture: LectureItem | null
@@ -46,6 +50,9 @@ export type AppState = {
   setRemotePlayers: (presences: PresenceState[]) => void
   updateRemoteMove: (move: MovePayload) => void
   setConnection: (connection: ConnectionState) => void
+  setNoticeOpen: (open: boolean) => void
+  setNotices: (notices: NoticesResult | null) => void
+  setNoticeError: (error: boolean) => void
   setProfessorChatOpen: (open: boolean) => void
   addProfessorTurn: (turn: ProfessorTurn) => void
   clearProfessorHistory: () => void
@@ -64,6 +71,9 @@ const initialState = {
   screenStream: null,
   remotePlayers: {},
   connection: 'connecting' as ConnectionState,
+  noticeOpen: false,
+  notices: null as NoticesResult | null,
+  noticeError: false,
   professorChatOpen: false,
   professorHistory: [] as ProfessorTurn[],
   selectedLecture: null,
@@ -102,6 +112,9 @@ export const useStore = create<AppState>()((set) => ({
       }
     }),
   setConnection: (connection) => set({ connection }),
+  setNoticeOpen: (noticeOpen) => set({ noticeOpen }),
+  setNotices: (notices) => set({ notices }),
+  setNoticeError: (noticeError) => set({ noticeError }),
   setProfessorChatOpen: (professorChatOpen) => set({ professorChatOpen }),
   addProfessorTurn: (turn) =>
     set((s) => ({ professorHistory: [...s.professorHistory, turn] })),
