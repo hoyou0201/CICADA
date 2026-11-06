@@ -26,10 +26,11 @@ import {
   WALK_BOUNDS,
 } from '../scene/campus/layout.ts'
 import FollowCamera from '../scene/player/FollowCamera.tsx'
-import { pickFloor } from '../scene/player/useClickToMove.ts'
+import { listenTap, pickFloor } from '../scene/player/useClickToMove.ts'
 import {
   WALK_SPEED,
   isTypingTarget,
+  releaseMenuFocus,
   type StepResult,
 } from '../scene/player/usePlayerControls.ts'
 import { useStore, type Position } from '../state/store.ts'
@@ -165,6 +166,7 @@ function useHallwayControls(): void {
     const onKeyDown = (e: KeyboardEvent) => {
       if (!(e.code in KEY_DIRECTIONS)) return
       if (isTypingTarget(e.target) || e.ctrlKey || e.metaKey || e.altKey) return
+      releaseMenuFocus(e.target)
       keys.add(e.code)
       e.preventDefault()
       if (useStore.getState().moveTarget) useStore.getState().setMoveTarget(null)
@@ -186,8 +188,7 @@ function useHallwayControls(): void {
 
   useEffect(() => {
     const canvas = gl.domElement
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.button !== 0) return
+    return listenTap(canvas, (e) => {
       const rect = canvas.getBoundingClientRect()
       if (rect.width === 0 || rect.height === 0) return
       const ndc = {
@@ -196,9 +197,7 @@ function useHallwayControls(): void {
       }
       const point = pickFloor(ndc, camera)
       if (point) useStore.getState().setMoveTarget(clampToHallwayBounds(point))
-    }
-    canvas.addEventListener('pointerdown', onPointerDown)
-    return () => canvas.removeEventListener('pointerdown', onPointerDown)
+    })
   }, [gl, camera])
 
   useFrame((_, delta) => {
