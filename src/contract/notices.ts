@@ -10,13 +10,13 @@ export type NoticesResponse = {
 }
 
 /**
- * 게시판 번호 후보. 이름은 인천대 홈페이지에서 확인해 채운다(아직 미확인).
+ * 인천대 홈페이지 공지사항 게시판 이름.
  * 서버에서 5분 캐시한다.
  */
 export const NOTICE_BOARDS = [
-  { board: 246, name: '미정' },
-  { board: 247, name: '미정' },
-  { board: 249, name: '미정' },
+  { board: 246, name: '학사' },
+  { board: 247, name: '학점교류' },
+  { board: 249, name: '장학금' },
 ] as const
 
 export const NOTICES_CACHE_SECONDS = 300
