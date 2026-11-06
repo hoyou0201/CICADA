@@ -4,7 +4,7 @@ import { useStore, type Position } from '../../state/store.ts'
 import { WALK_BOUNDS } from '../layout.ts'
 
 /** 걷는 속도(미터/초). */
-export const WALK_SPEED = 3.5
+export const WALK_SPEED = 6
 
 /** 이동 목표에 이만큼 가까워지면 도착한 것으로 본다(미터). */
 const ARRIVE_DISTANCE = 0.05
@@ -31,7 +31,13 @@ export function clampToBounds(p: Position): Position {
 export function isTypingTarget(target: EventTarget | null): boolean {
   const el = target as { tagName?: string; isContentEditable?: boolean } | null
   if (!el || typeof el.tagName !== 'string') return false
-  return el.isContentEditable === true || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
+  return el.isContentEditable === true || ['INPUT', 'TEXTAREA'].includes(el.tagName)
+}
+
+/** 메뉴(버튼·선택 상자)에 포커스가 남아 있으면 풀어서, 방향키가 메뉴가 아니라 걷기로 가게 한다. */
+export function releaseMenuFocus(target: EventTarget | null): void {
+  const el = target as { tagName?: string; blur?: () => void } | null
+  if (el && (el.tagName === 'SELECT' || el.tagName === 'BUTTON')) el.blur?.()
 }
 
 export type StepResult = {
@@ -100,6 +106,7 @@ export function usePlayerControls(): void {
     const onKeyDown = (e: KeyboardEvent) => {
       if (!(e.code in KEY_DIRECTIONS)) return
       if (isTypingTarget(e.target) || e.ctrlKey || e.metaKey || e.altKey) return
+      releaseMenuFocus(e.target)
       keys.add(e.code)
       e.preventDefault()
       // 키를 누르면 클릭 이동은 취소한다.
