@@ -1,0 +1,27 @@
+{
+  "user": { "fullName": "샘플 학생" },
+  "courses": [
+    { "id": 101, "name": "자료구조" },
+    { "id": 102, "name": "운영체제" },
+    { "id": 103, "name": "데이터베이스" },
+    { "id": 104, "name": "교양 글쓰기" }
+  ],
+  "lectures": [
+    { "id": "lec-101-5-1", "courseId": 101, "title": "5주차 1강 트리와 이진 탐색 트리", "url": "https://example.com/sample/lec-101-5-1", "week": "5주차", "dueAt": "2026-11-08T14:59:00.000Z", "done": true },
+    { "id": "lec-101-5-2", "courseId": 101, "title": "5주차 2강 AVL 트리", "url": "https://example.com/sample/lec-101-5-2", "week": "5주차", "dueAt": "2026-11-08T14:59:00.000Z", "done": false },
+    { "id": "lec-102-5-1", "courseId": 102, "title": "5주차 1강 프로세스 스케줄링", "url": "https://example.com/sample/lec-102-5-1", "week": "5주차", "dueAt": "2026-11-09T14:59:00.000Z", "done": false },
+    { "id": "lec-102-5-2", "courseId": 102, "title": "5주차 2강 동기화와 세마포어", "url": "https://example.com/sample/lec-102-5-2", "week": "5주차", "dueAt": "2026-11-09T14:59:00.000Z", "done": null },
+    { "id": "lec-103-5-1", "courseId": 103, "title": "5주차 1강 정규화", "url": "https://example.com/sample/lec-103-5-1", "week": "5주차", "dueAt": "2026-11-10T14:59:00.000Z", "done": true },
+    { "id": "lec-103-5-2", "courseId": 103, "title": "5주차 2강 트랜잭션", "url": "https://example.com/sample/lec-103-5-2", "week": "5주차", "dueAt": "2026-11-10T14:59:00.000Z", "done": null },
+    { "id": "lec-104-5-1", "courseId": 104, "title": "5주차 비평문 쓰기 강의", "url": "https://example.com/sample/lec-104-5-1", "week": null, "dueAt": null, "done": null }
+  ],
+  "deadlines": [
+    { "id": "dl-101-vod", "courseId": 101, "title": "5주차 2강 AVL 트리", "dueAt": "2026-11-08T14:59:00.000Z", "url": "https://example.com/sample/lec-101-5-2", "kind": "vod" },
+    { "id": "dl-102-assign", "courseId": 102, "title": "과제 3 스케줄러 구현", "dueAt": "2026-11-09T14:59:00.000Z", "url": "https://example.com/sample/assign-102-3", "kind": "assign" },
+    { "id": "dl-103-quiz", "courseId": 103, "title": "정규화 퀴즈", "dueAt": "2026-11-11T14:59:00.000Z", "url": "https://example.com/sample/quiz-103-2", "kind": "quiz" },
+    { "id": "dl-104-other", "courseId": 104, "title": "비평문 초안 제출", "dueAt": "2026-11-13T14:59:00.000Z", "url": "https://example.com/sample/other-104-1", "kind": "other" }
+  ],
+  "fetchedAt": "2026-11-06T00:00:00.000Z",
+  "isSample": true,
+  "partial": false
+}
