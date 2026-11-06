@@ -51,6 +51,16 @@ describe('강의실 presence', () => {
     await vi.waitFor(() => expect(client.realtime.disconnect).toHaveBeenCalled())
   })
 
+  it('페이지가 복원되면 presence를 다시 등록한다', () => {
+    const handle = joinPresence({ nickname: '학생' })
+    const client = fake.clients[0]
+    window.dispatchEvent(new Event('pagehide'))
+    expect(client.untracked).toBe(true)
+    window.dispatchEvent(new Event('pageshow'))
+    expect(client.tracked).toHaveLength(2)
+    handle.leave()
+  })
+
   it('즉시 다시 입장해도 이전 연결 종료가 새 연결을 해제하지 않는다', async () => {
     const first = joinPresence({ nickname: '첫 입장' })
     first.leave()

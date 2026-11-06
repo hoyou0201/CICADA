@@ -149,10 +149,18 @@ export function joinPresence(init: PresenceInit): PresenceHandle {
   })
 
   // 탭을 닫을 때 바로 빠지도록 한다.
+  let pageHidden = false
   const onPageHide = () => {
+    pageHidden = true
     channel.untrack().catch(() => {})
   }
+  const onPageShow = () => {
+    if (!pageHidden) return
+    pageHidden = false
+    track()
+  }
   window.addEventListener('pagehide', onPageHide)
+  window.addEventListener('pageshow', onPageShow)
 
   const handle: PresenceHandle = {
     key,
@@ -166,6 +174,7 @@ export function joinPresence(init: PresenceInit): PresenceHandle {
       closed = true
       unsubscribeStore()
       window.removeEventListener('pagehide', onPageHide)
+      window.removeEventListener('pageshow', onPageShow)
       channel.untrack().catch(() => {})
       client.removeChannel(channel).catch(() => {}).finally(() => client.realtime.disconnect())
       useStore.getState().setRemotePlayers([])
