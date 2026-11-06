@@ -72,7 +72,7 @@
 | 패키지 도구·lockfile | npm, `package-lock.json` |
 | 설치 / 실행 / 포트 | `npm install` / `npm run dev` / 5173 |
 | lint / 테스트 / 빌드 명령 | `npm run lint` / `npm test`(Vitest, 계약·변환 함수만) / `npm run build` |
-| 배포 서비스·URL | Vercel(정적 사이트 + 서버 함수 `api/professor.ts`, `api/notices.ts`). 배포 URL: https://pelican-murex-seven.vercel.app (main 자동 배포) |
+| 배포 서비스·URL | Vercel(정적 사이트 + 서버 함수 `api/professor.ts`, `api/notices.ts`). 배포 URL: https://wt-deploy-ebon.vercel.app (수동 배포, GitHub 자동 배포 연결은 아직) |
 | 데이터 저장·외부 API·비밀값 위치 | 데이터베이스 없음. LMS는 브라우저에서 lms.inu.ac.kr Moodle 웹 서비스(`/login/token.php`, `/webservice/rest/server.php`, CORS `*` 확인)로 직접 호출. 같은 방은 Supabase Realtime(presence + broadcast), 프로젝트는 미정(팀이 만든다). AI 교수님은 서버 함수에서 Claude API 호출(`@anthropic-ai/sdk`, 모델 `claude-haiku-5-5`). 학교 공지는 서버 함수가 인천대 홈페이지 RSS(`https://www.inu.ac.kr/bbs/inu/{게시판번호}/rssList.do?row=N`, CORS 없음)를 읽어 JSON으로 준다. 비밀값은 Vercel 환경 변수 |
 | 환경 변수 이름 (값은 `.env.example`에 쓰지 않는다) | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `ANTHROPIC_API_KEY`(서버 함수 전용) |
 | 프롬프트 로그 | 평가 항목이므로 처음부터 남긴다. 각 에이전트의 대화 기록 파일(Claude Code의 프로젝트별 `*.jsonl`, Codex의 `~/.codex/sessions`)을 마지막에 모아 비밀값을 가린 뒤 `docs/prompt-log/`에 넣고, 대표 프롬프트를 골라 이유를 적은 `docs/prompt-log/README.md`를 만든다. 학번·비밀번호·토큰은 에이전트 대화에 절대 입력하지 않는다 |
