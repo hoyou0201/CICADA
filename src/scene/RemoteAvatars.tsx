@@ -55,9 +55,11 @@ export default function RemoteAvatars() {
 
   return (
     <>
-      {Object.values(players).filter((player) => player.roomId === roomId).map((player) => (
-        <RemoteAvatar key={player.key} player={player} />
-      ))}
+      {Object.values(players)
+        .filter((player) => player.roomId === roomId && player.position)
+        .map((player) => (
+          <RemoteAvatar key={player.key} player={player} />
+        ))}
     </>
   )
 }

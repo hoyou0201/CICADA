@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { EXIT_DOOR, WALK_BOUNDS } from '../layout.ts'
-import { SPAWN_CLEARANCE, pickSpawn } from './spawn.ts'
+import { SPAWN_CLEARANCE, pickSpawn, shouldYieldSpawn } from './spawn.ts'
 
 const doorX = EXIT_DOOR.position[0]
 const doorZ = EXIT_DOOR.position[2]
@@ -52,6 +52,15 @@ describe('pickSpawn', () => {
       expect(p.z).toBeGreaterThanOrEqual(WALK_BOUNDS.minZ)
       expect(p.z).toBeLessThanOrEqual(WALK_BOUNDS.maxZ)
     }
+  })
+
+  it('겹친 자리에서는 키가 더 큰 쪽만 비킨다', () => {
+    const here = { x: 1, z: 2 }
+    const smaller = { key: 'a', position: { x: 1.2, z: 2 } }
+    const larger = { key: 'c', position: { x: 1.2, z: 2 } }
+    expect(shouldYieldSpawn('b', here, [smaller])).toBe(true)
+    expect(shouldYieldSpawn('b', here, [larger])).toBe(false)
+    expect(shouldYieldSpawn('b', here, [{ key: 'a', position: { x: 5, z: 5 } }])).toBe(false)
   })
 
   it('빈 자리가 없으면 가장 덜 붐비는 자리를 돌려준다', () => {

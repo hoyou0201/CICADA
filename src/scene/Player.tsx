@@ -5,7 +5,8 @@ import { useStore } from '../state/store.ts'
 import { anonymousNumber, loadNickname, resolveNickname } from '../ui/nickname.ts'
 import AvatarModel from './avatar/AvatarModel.tsx'
 import FollowCamera from './player/FollowCamera.tsx'
-import { pickSpawn } from './player/spawn.ts'
+import { currentPresenceKey } from '../room/presence.ts'
+import { pickSpawn, shouldYieldSpawn } from './player/spawn.ts'
 import { useClickToMove } from './player/useClickToMove.ts'
 import { usePlayerControls } from './player/usePlayerControls.ts'
 
@@ -25,11 +26,47 @@ export default function Player() {
   useClickToMove()
 
   // 입장 위치: 같은 방 다른 사람과 겹치지 않는 문 앞 자리.
+  // 위치가 도착하기 전에는 둘 다 문 앞에 서므로, 키가 더 큰 쪽만 빈 자리로 비킨다.
+  // 직접 걷기 시작하면 더 이상 옮기지 않는다.
   useEffect(() => {
+    let allow = true
+    let adjusting = false
+    const separate = () => {
+      if (!allow) return
+      const myKey = currentPresenceKey()
+      if (!myKey) return
+      const { remotePlayers, position, setPosition, setMoveTarget } = useStore.getState()
+      const crowd = Object.values(remotePlayers).map((player) => ({
+        key: player.key,
+        position: player.position,
+      }))
+      if (!shouldYieldSpawn(myKey, position, crowd)) return
+      const others = crowd.flatMap((player) => (player.position ? [player.position] : []))
+      adjusting = true
+      setMoveTarget(null)
+      setPosition(pickSpawn(others))
+      adjusting = false
+    }
     const { remotePlayers, setPosition, setMoveTarget } = useStore.getState()
     const others = Object.values(remotePlayers).flatMap((p) => (p.position ? [p.position] : []))
     setMoveTarget(null)
     setPosition(pickSpawn(others))
+    const unsubscribe = useStore.subscribe((state, prev) => {
+      if (!allow) return
+      if (state.position !== prev.position && !adjusting) {
+        allow = false
+        return
+      }
+      if (state.remotePlayers !== prev.remotePlayers) separate()
+    })
+    const timer = window.setTimeout(() => {
+      allow = false
+    }, 4000)
+    return () => {
+      allow = false
+      window.clearTimeout(timer)
+      unsubscribe()
+    }
   }, [])
 
   useFrame(() => {

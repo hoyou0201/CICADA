@@ -51,6 +51,24 @@ function candidates(origin: Point): Point[] {
  * 문 앞에서 가까운 순으로 clearance 이상 떨어진 첫 자리를 돌려주고,
  * 빈 자리가 없으면 후보 중 가장 가까운 사람과 가장 멀리 떨어진 자리를 돌려준다.
  */
+/**
+ * 지금 자리가 나보다 키가 작은 사람과 겹치면 비킨다.
+ * 키가 더 작은 쪽이 그 자리에 남으므로 둘이 동시에 들어와도 한 쪽만 움직인다.
+ */
+export function shouldYieldSpawn(
+  myKey: string,
+  here: Point,
+  others: { key: string; position: Point | null }[],
+  clearance: number = SPAWN_CLEARANCE,
+): boolean {
+  return others.some(
+    (other) =>
+      other.position !== null &&
+      other.key < myKey &&
+      Math.hypot(other.position.x - here.x, other.position.z - here.z) < clearance,
+  )
+}
+
 export function pickSpawn(others: Point[], clearance: number = SPAWN_CLEARANCE): Point {
   const origin = {
     x: clamp(DOOR_FRONT.x, WALK_BOUNDS.minX, WALK_BOUNDS.maxX),
