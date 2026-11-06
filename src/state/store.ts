@@ -30,6 +30,7 @@ export type AppState = {
   /** 같은 방 사람들(key로 구분, 나 제외) */
   remotePlayers: Record<string, RemotePlayer>
   connection: ConnectionState
+  professorChatOpen: boolean
   professorHistory: ProfessorTurn[]
   selectedLecture: LectureItem | null
 
@@ -45,6 +46,7 @@ export type AppState = {
   setRemotePlayers: (presences: PresenceState[]) => void
   updateRemoteMove: (move: MovePayload) => void
   setConnection: (connection: ConnectionState) => void
+  setProfessorChatOpen: (open: boolean) => void
   addProfessorTurn: (turn: ProfessorTurn) => void
   clearProfessorHistory: () => void
   setSelectedLecture: (lecture: LectureItem | null) => void
@@ -62,6 +64,7 @@ const initialState = {
   screenStream: null,
   remotePlayers: {},
   connection: 'connecting' as ConnectionState,
+  professorChatOpen: false,
   professorHistory: [] as ProfessorTurn[],
   selectedLecture: null,
 }
@@ -99,6 +102,7 @@ export const useStore = create<AppState>()((set) => ({
       }
     }),
   setConnection: (connection) => set({ connection }),
+  setProfessorChatOpen: (professorChatOpen) => set({ professorChatOpen }),
   addProfessorTurn: (turn) =>
     set((s) => ({ professorHistory: [...s.professorHistory, turn] })),
   clearProfessorHistory: () => set({ professorHistory: [] }),
