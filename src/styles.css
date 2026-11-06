@@ -1,0 +1,112 @@
+/* 전역 스타일. 변수 값은 임시이며 이름은 그대로 쓴다. */
+:root {
+  /* 색 */
+  --color-bg: #10131a;
+  --color-surface: #1b2030;
+  --color-surface-2: #252b3d;
+  --color-border: #343b52;
+  --color-text: #eef1f7;
+  --color-text-muted: #9aa3b8;
+  --color-primary: #4f8cff;
+  --color-primary-text: #ffffff;
+  --color-accent: #ffc94d;
+  --color-success: #3ccf8e;
+  --color-warning: #ffb347;
+  --color-danger: #ff5c6c;
+  --color-sample: #b18cff;
+  --color-overlay: rgb(16 19 26 / 0.72);
+
+  /* 글꼴 */
+  --font-sans: 'Pretendard', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+  --line-height: 1.5;
+
+  /* 간격 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* 모양 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-panel: 0 8px 24px rgb(0 0 0 / 0.35);
+  --z-overlay: 10;
+  --z-modal: 20;
+
+  color-scheme: dark;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.center-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.scene-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* 캔버스 위 UI 층. 빈 곳은 클릭이 캔버스로 지나간다. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-overlay);
+  pointer-events: none;
+}
+
+.overlay > * {
+  pointer-events: auto;
+}
